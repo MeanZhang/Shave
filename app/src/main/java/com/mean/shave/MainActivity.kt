@@ -217,6 +217,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * 保存文件
+     */
     private fun save(sourceUri: Uri, uri: Uri) {
         type.value = Type.Saving
         lifecycleScope.launch(Dispatchers.IO) {
@@ -242,6 +245,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * 保存文本
+     */
     private fun save(text: String, uri: Uri) {
         type.value = Type.Saving
         lifecycleScope.launch(Dispatchers.IO) {
@@ -254,7 +260,7 @@ class MainActivity : ComponentActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            finish()
+            type.value = Type.Text
         }
     }
 
