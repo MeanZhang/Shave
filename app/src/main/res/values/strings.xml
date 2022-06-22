@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Shave</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_save">保存</string>
 </resources>
