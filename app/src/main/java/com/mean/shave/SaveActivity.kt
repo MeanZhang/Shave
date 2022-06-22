@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedTextField
@@ -33,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.lifecycleScope
 import com.mean.shave.ui.theme.ShaveTheme
 import kotlinx.coroutines.Dispatchers
@@ -99,10 +99,12 @@ class SaveActivity : ComponentActivity() {
             val error by errorFlow.collectAsState()
 
             ShaveTheme {
+
                 AlertDialog(
+                    properties = DialogProperties(dismissOnClickOutside = false),
                     modifier = Modifier.wrapContentSize(),
                     title = { Text(stringResource(R.string.app_name)) },
-                    onDismissRequest = {},
+                    onDismissRequest = { finish() },
                     confirmButton = {
                         when (contentType) {
                             Type.Text -> {
