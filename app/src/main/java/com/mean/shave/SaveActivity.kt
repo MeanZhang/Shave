@@ -138,7 +138,7 @@ class SaveActivity : ComponentActivity() {
                                 }
                                 Type.Error, Type.Others -> {
                                     TextButton(onClick = { finish() }) {
-                                        Text("确定")
+                                        Text("退出")
                                     }
                                 }
                             }
@@ -151,6 +151,11 @@ class SaveActivity : ComponentActivity() {
                                         finish()
                                     }) {
                                         Text("复制")
+                                    }
+                                }
+                                Type.Error -> {
+                                    TextButton(onClick = { save() }) {
+                                        Text("重试")
                                     }
                                 }
                             }
@@ -251,10 +256,6 @@ class SaveActivity : ComponentActivity() {
             "已复制到剪贴板",
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    private fun log(msg: Any?) {
-        Log.d("Shave", msg.toString())
     }
 }
 
