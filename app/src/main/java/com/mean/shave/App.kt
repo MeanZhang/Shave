@@ -19,12 +19,10 @@ class App : Application() {
         lateinit var context: Context
         var isFirstLaunch: Boolean = true
 
-        fun setNotFirstLaunch() {
+        suspend fun setNotFirstLaunch() {
             isFirstLaunch = false
-            runBlocking {
-                context.dataStore.edit {
-                    it[booleanPreferencesKey("isFirstLaunch")] = false
-                }
+            context.dataStore.edit {
+                it[booleanPreferencesKey("isFirstLaunch")] = false
             }
         }
     }

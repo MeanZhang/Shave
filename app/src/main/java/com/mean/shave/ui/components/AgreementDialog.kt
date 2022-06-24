@@ -7,15 +7,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.window.DialogProperties
 import com.mean.shave.App
 import com.mean.shave.R
 import com.mean.shave.openURL
+import kotlinx.coroutines.launch
 
 @Composable
 fun AgreementDialog(
@@ -23,11 +26,15 @@ fun AgreementDialog(
     onAgree: () -> Unit,
     onDisagree: () -> Unit
 ) {
+    val scope = rememberCoroutineScope()
     AlertDialog(
+        properties = DialogProperties(dismissOnClickOutside = false),
         onDismissRequest = { onDisagree() },
         confirmButton = {
             TextButton(onClick = {
-                App.setNotFirstLaunch()
+                scope.launch {
+                    App.setNotFirstLaunch()
+                }
                 onAgree()
             }) {
                 Text("同意")
