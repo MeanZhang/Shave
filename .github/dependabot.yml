@@ -18,3 +18,10 @@ updates:
       interval: weekly
       timezone: "Asia/Shanghai"
     target-branch: "dev"
+
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      timezone: "Asia/Shanghai"
+    target-branch: "dev"

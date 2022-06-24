@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">Shave</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="app_name">享存</string>
+    <string name="title_activity_settings">设置</string>
     <string name="title_activity_save">保存</string>
+    <string name="github_page">https://github.com/MeanZhang</string>
+    <string name="developer_introduction">一个业余开发者</string>
+    <string name="github_repo">https://github.com/MeanZhang/Shave</string>
+    <string name="agreement">https://shave.meancoder.xyz/agreement</string>
+    <string name="privacy">https://shave.meancoder.xyz/privacy</string>
+    <string name="feedback_url">https://support.qq.com/product/414607</string>
 </resources>

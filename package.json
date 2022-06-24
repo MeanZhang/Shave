@@ -1,0 +1,15 @@
+{
+  "name": "shave",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:MeanZhang/Shave.git",
+  "author": "Mean <390602272@qq.com>",
+  "license": "MIT",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "devDependencies": {
+    "vuepress": "^2.0.0-beta.48"
+  }
+}

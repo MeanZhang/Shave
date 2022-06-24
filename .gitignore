@@ -14,3 +14,7 @@
 .cxx
 local.properties
 app/release
+node_modules
+.temp
+.cache
+dist
