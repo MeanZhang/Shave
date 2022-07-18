@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-    def accompanist_version = '0.24.12-rc'
+    def accompanist_version = '0.24.13-rc'
     // accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist_version")
     // Material 3
