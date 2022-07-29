@@ -141,6 +141,7 @@ class SaveActivity : ComponentActivity() {
                                         Text("退出")
                                     }
                                 }
+                                else -> {}
                             }
                         },
                         dismissButton = {
@@ -158,6 +159,7 @@ class SaveActivity : ComponentActivity() {
                                         Text("重试")
                                     }
                                 }
+                                else -> {}
                             }
                         },
                         text = {
