@@ -51,7 +51,7 @@ dependencies {
     // accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanist_version")
     // Material 3
-    implementation("androidx.compose.material3:material3:1.0.0-alpha13")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha14")
     //DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     //图标扩展
