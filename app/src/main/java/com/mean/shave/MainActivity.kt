@@ -11,9 +11,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -35,6 +33,7 @@ import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
@@ -48,7 +47,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -105,36 +103,33 @@ class MainActivity : ComponentActivity() {
                         ) {
                             //--------------------------
                             SettingGroupTitle("开发者")
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier
-                                    .clickable { openURL(getString(R.string.github_page)) }
-                                    .padding(HORIZONTAL_MARGIN, 12.dp)
-                                    .fillMaxWidth()
-                            ) {
-                                Image(
-                                    painterResource(R.drawable.avatar),
-                                    "开发者头像",
-                                    modifier = Modifier
-                                        .padding(end = 10.dp)
-                                        .height(42.dp)
-                                        .clip(CircleShape)
-                                )
-                                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                    Text("Mean", style = MaterialTheme.typography.titleLarge)
-                                    Text(
-                                        stringResource(R.string.developer_introduction),
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                            ListItem(
+                                headlineText = { Text("Mean") },
+                                supportingText = { Text(stringResource(R.string.developer_introduction)) },
+                                leadingContent = {
+                                    Image(
+                                        painterResource(R.drawable.avatar),
+                                        "开发者头像",
+                                        modifier = Modifier
+                                            .height(24.dp)
+                                            .clip(CircleShape)
                                     )
-                                }
-                            }
-                            SettingItem(ImageVector.vectorResource(R.drawable.github),
-                                title = "Github 仓库",
-                                description = stringResource(
-                                    R.string.github_repo
-                                ),
-                                onClick = { openURL(getString(R.string.github_repo)) })
+                                },
+                                modifier = Modifier.clickable { openURL(getString(R.string.github_page)) }
+                            )
+                            ListItem(
+                                headlineText = { Text("Github 仓库") },
+                                supportingText = { Text(stringResource(R.string.github_repo)) },
+                                leadingContent = {
+                                    Icon(
+                                        ImageVector.vectorResource(R.drawable.github),
+                                        "Github 仓库",
+                                        modifier = Modifier
+                                            .size(24.dp)
+                                    )
+                                },
+                                modifier = Modifier.clickable { openURL(getString(R.string.github_repo)) }
+                            )
                             //--------------------------
                             MenuDefaults.Divider()
                             SettingGroupTitle("帮助与反馈")
@@ -157,7 +152,7 @@ class MainActivity : ComponentActivity() {
                             //--------------------------
                             MenuDefaults.Divider()
                             SettingGroupTitle("开放源代码许可")
-                            getLicenses().forEach {
+                            LICENSES.forEach {
                                 LicenseItem(context = this@MainActivity, license = it)
                             }
                         }
@@ -210,6 +205,7 @@ fun SettingGroupTitle(title: String) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingItem(
     icon: ImageVector,
@@ -217,115 +213,40 @@ fun SettingItem(
     description: String? = null,
     onClick: () -> Unit = {}
 ) {
-    Row(
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .padding(horizontal = HORIZONTAL_MARGIN, vertical = 16.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = title,
-            modifier = Modifier
-                .padding(start = 4.dp, end = 20.dp)
-                .size(28.dp)
-        )
-        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleLarge
-            )
-            description?.let {
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
-        }
-    }
+    ListItem(
+        headlineText = { Text(title) },
+        supportingText = { description?.let { Text(it) } },
+        leadingContent = { Icon(icon, title) },
+        modifier = Modifier.clickable { onClick() }
+    )
 }
 
-@Composable
-fun SettingItemWinthoutIcon(
-    title: String,
-    description: String,
-    onClick: () -> Unit = {}
-) {
-    Row(
-        modifier = Modifier
-            .clickable(onClick = onClick)
-            .padding(horizontal = HORIZONTAL_MARGIN, vertical = 8.dp)
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Text(
-                text = description,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-        }
-    }
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LicenseItem(context: Context?, license: License) {
-    Column(
-        Modifier
-            .clickable {
-                context?.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(license.url)))
-            }
-            .fillMaxWidth()
-            .padding(horizontal = HORIZONTAL_MARGIN, 12.dp)
-    ) {
-        Text(
-            license.name,
-            style = MaterialTheme.typography.titleMedium
-        )
-        Text(
-            license.url,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            license.license,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
+    ListItem(
+        headlineText = { Text(license.name) },
+        supportingText = { Text(license.url + "\n" + license.license) },
+        modifier = Modifier.clickable { context?.openURL(license.url) }
+    )
 }
 
-private fun getLicenses(): MutableList<License> {
-    val licenses = mutableListOf<License>()
-    licenses.add(
-        License(
-            "Android Jetpack",
-            "https://github.com/androidx/androidx",
-            "Apache License 2.0"
-        )
+private val LICENSES = listOf(
+    License(
+        "Android Jetpack",
+        "https://github.com/androidx/androidx",
+        "Apache License 2.0"
+    ),
+    License(
+        "Accompanist",
+        "https://github.com/google/accompanist",
+        "Apache License 2.0"
+    ),
+    License(
+        "Kotlin",
+        "https://github.com/JetBrains/kotlin",
+        "Apache License 2.0"
     )
-    licenses.add(
-        License(
-            "Accompanist",
-            "https://github.com/google/accompanist",
-            "Apache License 2.0"
-        )
-    )
-    licenses.add(
-        License(
-            "Kotlin",
-            "https://github.com/JetBrains/kotlin",
-            "Apache License 2.0"
-        )
-    )
-    licenses.sortBy { it.name }
-    return licenses
-}
+).sortedBy { it.name }
 
 data class License(val name: String, val url: String, val license: String)
