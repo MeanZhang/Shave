@@ -8,20 +8,23 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
       timezone: "Asia/Shanghai"
+      time: "9:00"
     target-branch: "dev"
 
   - package-ecosystem: gradle
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
       timezone: "Asia/Shanghai"
+      time: "9:00"
     target-branch: "dev"
 
   - package-ecosystem: npm
     directory: /
     schedule:
-      interval: weekly
+      interval: monthly
       timezone: "Asia/Shanghai"
+      time: "9:00"
     target-branch: "dev"
