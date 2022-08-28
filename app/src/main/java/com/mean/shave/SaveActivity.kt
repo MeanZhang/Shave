@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Parcelable
 import android.provider.OpenableColumns
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -49,7 +48,6 @@ class SaveActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("SHAVEL", App.isFirstLaunch.toString())
 
         var sourceUri: Uri? = null
         val text = MutableStateFlow("")
@@ -75,7 +73,7 @@ class SaveActivity : ComponentActivity() {
 
         fun save() {
             when (intent.action) {
-                Intent.ACTION_SEND -> {
+                Intent.ACTION_SEND, Intent.ACTION_VIEW -> {
                     if ("text/plain" == intent.type) {
                         type.value = Type.Text
                         text.value = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
@@ -93,9 +91,6 @@ class SaveActivity : ComponentActivity() {
                             saveLauncher.launch(filename)
                         }
                     }
-                }
-                Intent.ACTION_SEND_MULTIPLE -> {
-                    Toast.makeText(this, intent.type, Toast.LENGTH_SHORT).show()
                 }
                 else -> {
                     type.value = Type.Others
