@@ -49,9 +49,9 @@ android {
 dependencies {
     // Material 3
     implementation("androidx.compose.material3:material3:1.0.0-alpha14")
-    //DataStore
+    // DataStore
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-    //图标扩展
+    // 图标扩展
     implementation("androidx.compose.material:material-icons-extended:$compose_version")
     // Material
     implementation("com.google.android.material:material:1.6.1")

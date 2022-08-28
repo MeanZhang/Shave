@@ -228,13 +228,18 @@ private val LICENSES = listOf(
         "Apache License 2.0"
     ),
     License(
-        "Accompanist",
-        "https://github.com/google/accompanist",
+        "Kotlin",
+        "https://github.com/JetBrains/kotlin",
         "Apache License 2.0"
     ),
     License(
-        "Kotlin",
-        "https://github.com/JetBrains/kotlin",
+        "Material Components for Android",
+        "https://github.com/material-components/material-components-android",
+        "Apache License 2.0"
+    ),
+    License(
+        "XLog",
+        "https://github.com/elvishew/xLog",
         "Apache License 2.0"
     )
 ).sortedBy { it.name }
