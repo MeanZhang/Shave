@@ -1,18 +1,15 @@
 package com.mean.shave
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Intent
+import  android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,17 +34,11 @@ import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.mean.shave.ui.components.AgreementDialog
 import com.mean.shave.ui.theme.ShaveTheme
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SaveActivity : ComponentActivity() {
-    private val state = MutableStateFlow(State.Others)
-    private val text = MutableStateFlow("")
-    private var sourceUri: Uri? = null
+    private val viewModel by viewModels<SaveViewModel> { SaveViewModelFactory(intent) }
     private var saveLauncher: ActivityResultLauncher<String>? = null
-    private val error = MutableStateFlow("")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,13 +48,22 @@ class SaveActivity : ComponentActivity() {
             ActivityResultContracts.CreateDocument(intent.type ?: "*/*")
         ) { save(it) }
 
-        if (!App.isFirstLaunch) {
+        if (!App.isFirstLaunch && viewModel.state.value == State.Launching) {
             save()
         }
+
+        lifecycleScope.launch {
+            viewModel.state.collect {
+                if (it == State.Success) {
+                    Toast.makeText(this@SaveActivity, "文件保存成功", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         setContent {
-            val contentState by state.collectAsState()
-            val textState by text.collectAsState()
-            val errorState by error.collectAsState()
+            val state by viewModel.state.collectAsState()
+            val text by viewModel.text.collectAsState()
+            val error by viewModel.error.collectAsState()
             var showAgreement by remember { mutableStateOf(App.isFirstLaunch) }
 
             ShaveTheme {
@@ -80,7 +80,7 @@ class SaveActivity : ComponentActivity() {
                         modifier = Modifier.wrapContentSize(),
                         title = {
                             Text(
-                                when (contentState) {
+                                when (state) {
                                     State.Saving -> "保存中"
                                     State.Error -> "错误"
                                     else -> stringResource(R.string.app_name)
@@ -89,52 +89,57 @@ class SaveActivity : ComponentActivity() {
                         },
                         onDismissRequest = { finish() },
                         confirmButton = {
-                            when (contentState) {
+                            when (state) {
                                 State.Text -> {
                                     TextButton(onClick = {
-                                        saveLauncher?.launch(textState.take(10) + ".txt")
+                                        saveLauncher?.launch((text ?: "").take(10) + ".txt")
                                     }) {
                                         Text("保存")
                                     }
                                 }
+
                                 State.Error, State.Others -> {
                                     TextButton(onClick = { finish() }) {
                                         Text("退出")
                                     }
                                 }
+
                                 else -> {}
                             }
                         },
                         dismissButton = {
-                            when (contentState) {
+                            when (state) {
                                 State.Text -> {
                                     TextButton(onClick = {
-                                        copy(textState)
+                                        viewModel.copy(text ?: "")
                                         finish()
                                     }) {
                                         Text("复制")
                                     }
                                 }
+
                                 State.Error -> {
                                     TextButton(onClick = { save() }) {
                                         Text("重试")
                                     }
                                 }
+
                                 else -> {}
                             }
                         },
                         text = {
-                            when (contentState) {
+                            when (state) {
                                 State.Text -> {
                                     OutlinedTextField(
                                         label = { Text("文本") },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(HORIZONTAL_MARGIN),
-                                        value = textState,
-                                        onValueChange = { text.value = it }
+                                        value = text ?: "",
+                                        onValueChange = { viewModel.setText(it) }
                                     )
                                 }
+
                                 State.Saving, State.Others -> {
                                     Box(
                                         contentAlignment = Alignment.Center,
@@ -143,8 +148,13 @@ class SaveActivity : ComponentActivity() {
                                         CircularProgressIndicator(Modifier.size(64.dp))
                                     }
                                 }
+
                                 State.Error -> {
-                                    Text(errorState)
+                                    Text(error)
+                                }
+
+                                else -> {
+
                                 }
                             }
                         }
@@ -154,128 +164,52 @@ class SaveActivity : ComponentActivity() {
         }
     }
 
-    /**
-     * 将文件保存到 URI 中
-     */
-    private fun save(uri: Uri?) {
-        if (uri != null) {
-            if (state.value == State.Text) {
-                save(text.value, uri)
-            } else {
-                sourceUri?.let { sourceUri -> save(sourceUri, uri) }
-            }
-        } else {
-            state.value = State.Error
-            error.value = "文件保存失败"
-            Toast.makeText(
-                this,
-                "文件保存失败",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-    }
 
     private fun save() {
         when (intent.action) {
             Intent.ACTION_SEND, Intent.ACTION_VIEW -> {
                 if ("text/plain" == intent.type) {
-                    state.value = State.Text
-                    text.value = intent.getStringExtra(Intent.EXTRA_TEXT) ?: ""
+                    viewModel.setState(State.Text)
+                    if (viewModel.text.value == null) {
+                        viewModel.setText(intent.getStringExtra(Intent.EXTRA_TEXT))
+                    }
                 } else {
-                    state.value = State.Others
-                    sourceUri = getUri()
-                    if (sourceUri != null && sourceUri!!.path != null) {
+                    viewModel.setState(State.Others)
+                    if (viewModel.sourceUri != null && viewModel.sourceUri!!.path != null) {
                         val filename =
-                            contentResolver.query(sourceUri!!, null, null, null, null)?.use {
-                                val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                                it.moveToFirst()
-                                it.getString(index)
-                            }
+                            contentResolver.query(viewModel.sourceUri!!, null, null, null, null)
+                                ?.use {
+                                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                                    it.moveToFirst()
+                                    it.getString(index)
+                                }
                         saveLauncher?.launch(filename)
                     }
                 }
             }
+
             else -> {
-                state.value = State.Error
-                error.value = "不支持的类型"
+                viewModel.setError("不支持的类型")
             }
         }
     }
 
-    private fun getUri(): Uri? {
-        return if (Build.VERSION.SDK_INT >= 33) {
-            intent.getParcelableExtra(Intent.EXTRA_STREAM, Parcelable::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(Intent.EXTRA_STREAM)
-        } as? Uri
-            ?: intent.data
-    }
 
     /**
-     * 保存文件
+     * 将文件保存到 URI 中
      */
-    private fun save(sourceUri: Uri, uri: Uri) {
-        state.value = State.Saving
-        lifecycleScope.launch(Dispatchers.IO) {
-            val outputStream = contentResolver.openOutputStream(uri)
-            val inputStream = contentResolver.openInputStream(sourceUri)
-            val buf = ByteArray(4096)
-            var len: Int
-            if (inputStream != null && outputStream != null) {
-                while (inputStream.read(buf).also { len = it } > 0) {
-                    outputStream.write(buf, 0, len)
+    private fun save(uri: Uri?) {
+        if (uri != null) {
+            lifecycleScope.launch {
+                if (viewModel.state.value == State.Text) {
+                    viewModel.save(viewModel.text.value ?: "", uri)
+                } else {
+                    viewModel.sourceUri?.let { sourceUri -> viewModel.save(sourceUri, uri) }
                 }
-                outputStream.close()
-                inputStream.close()
+                finish()
             }
-            withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    this@SaveActivity,
-                    "保存成功",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            finish()
+        } else {
+            viewModel.setError("选择文件失败")
         }
     }
-
-    /**
-     * 保存文本
-     */
-    private fun save(text: String, uri: Uri) {
-        state.value = State.Saving
-        lifecycleScope.launch(Dispatchers.IO) {
-            val outputStream = contentResolver.openOutputStream(uri)
-            outputStream?.write(text.toByteArray())
-            withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    this@SaveActivity,
-                    "保存成功",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            state.value = State.Text
-        }
-    }
-
-    /**
-     * 复制文本到剪贴板
-     */
-    private fun copy(text: String) {
-        val manager =
-            getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clipData =
-            ClipData.newPlainText("text", text)
-        manager.setPrimaryClip(clipData)
-        Toast.makeText(
-            this@SaveActivity,
-            "已复制到剪贴板",
-            Toast.LENGTH_SHORT
-        ).show()
-    }
-}
-
-enum class State {
-    Text, Others, Saving, Error
 }
