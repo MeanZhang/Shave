@@ -1,4 +1,4 @@
-import { defaultTheme, defineUserConfig } from "vuepress";
+import { defaultTheme, defineUserConfig } from "vuepress-vite";
 
 export default defineUserConfig({
   lang: "zh-CN",
