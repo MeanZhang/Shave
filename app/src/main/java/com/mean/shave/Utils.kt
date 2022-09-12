@@ -1,3 +1,5 @@
+@file:Suppress("ktlint:filename")
+
 package com.mean.shave
 
 import android.content.Context

@@ -49,7 +49,7 @@ fun AgreementDialog(
         text = {
             val annotatedString = buildAnnotatedString {
                 append("欢迎使用享存。\n\n我们将通过")
-                //TODO: 将来用withAnnotation替代
+                // TODO: 将来用withAnnotation替代
                 pushStringAnnotation("AGREEMENT", stringResource(R.string.agreement))
                 withStyle(
                     SpanStyle(
@@ -75,8 +75,8 @@ fun AgreementDialog(
                 pop()
                 append(
                     "帮助您了解我们处理个人信息的方式及您享有的权利。\n\n" +
-                            "保护用户信息是我们的一项基本原则，我们不会收集、使用、储存和分享您的任何相关信息。\n\n" +
-                            "点击“同意”按钮，即表示您同意上述协议和政策，若不同意，请点击“退出”按钮退出享存。"
+                        "保护用户信息是我们的一项基本原则，我们不会收集、使用、储存和分享您的任何相关信息。\n\n" +
+                        "点击“同意”按钮，即表示您同意上述协议和政策，若不同意，请点击“退出”按钮退出享存。"
                 )
             }
             ClickableText(
@@ -92,6 +92,8 @@ fun AgreementDialog(
                         start = position,
                         end = position
                     ).firstOrNull()?.let { context.openURL(it.item) }
-                })
-        })
+                }
+            )
+        }
+    )
 }

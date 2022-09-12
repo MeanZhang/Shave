@@ -1,6 +1,6 @@
 package com.mean.shave
 
-import  android.content.Intent
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
@@ -73,7 +73,9 @@ class SaveActivity : ComponentActivity() {
                         onAgree = {
                             showAgreement = false
                             save()
-                        }, onDisagree = { finish() })
+                        },
+                        onDisagree = { finish() }
+                    )
                 } else {
                     AlertDialog(
                         properties = DialogProperties(dismissOnClickOutside = false),
@@ -154,7 +156,6 @@ class SaveActivity : ComponentActivity() {
                                 }
 
                                 else -> {
-
                                 }
                             }
                         }
@@ -163,7 +164,6 @@ class SaveActivity : ComponentActivity() {
             }
         }
     }
-
 
     private fun save() {
         when (intent.action) {
@@ -193,7 +193,6 @@ class SaveActivity : ComponentActivity() {
             }
         }
     }
-
 
     /**
      * 将文件保存到 URI 中

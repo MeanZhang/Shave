@@ -52,7 +52,6 @@ class SaveViewModel(intent: Intent) : ViewModel() {
                 } else {
                     setError("无法打开源文件")
                 }
-
             }
         }
     }
@@ -84,7 +83,9 @@ class SaveViewModel(intent: Intent) : ViewModel() {
         val clipData = ClipData.newPlainText("text", text)
         manager.setPrimaryClip(clipData)
         Toast.makeText(
-            App.context, "已复制到剪贴板", Toast.LENGTH_SHORT
+            App.context,
+            "已复制到剪贴板",
+            Toast.LENGTH_SHORT
         ).show()
     }
 

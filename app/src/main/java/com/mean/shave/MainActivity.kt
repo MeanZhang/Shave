@@ -82,7 +82,8 @@ class MainActivity : ComponentActivity() {
                         AgreementDialog(
                             context = this,
                             onAgree = { showAgreement = false },
-                            onDisagree = { finish() })
+                            onDisagree = { finish() }
+                        )
                     } else {
                         Column(
                             Modifier
@@ -91,7 +92,7 @@ class MainActivity : ComponentActivity() {
                                 .padding(WindowInsets.navigationBars.asPaddingValues())
                                 .fillMaxSize()
                         ) {
-                            //--------------------------
+                            // --------------------------
                             SettingGroupTitle("开发者")
                             ListItem(
                                 headlineText = { Text("Mean") },
@@ -120,7 +121,7 @@ class MainActivity : ComponentActivity() {
                                 },
                                 modifier = Modifier.clickable { openURL(getString(R.string.github_repo)) }
                             )
-                            //--------------------------
+                            // --------------------------
                             MenuDefaults.Divider()
                             SettingGroupTitle("帮助与反馈")
                             SettingItem(
@@ -132,14 +133,20 @@ class MainActivity : ComponentActivity() {
                                     startActivity(intent)
                                 }
                             )
-                            //--------------------------
+                            // --------------------------
                             MenuDefaults.Divider()
                             SettingGroupTitle("隐私")
-                            SettingItem(Icons.Outlined.Description, "服务协议",
-                                onClick = { openURL(getString(R.string.agreement)) })
-                            SettingItem(Icons.Outlined.Verified, "隐私政策",
-                                onClick = { openURL(getString(R.string.privacy)) })
-                            //--------------------------
+                            SettingItem(
+                                Icons.Outlined.Description,
+                                "服务协议",
+                                onClick = { openURL(getString(R.string.agreement)) }
+                            )
+                            SettingItem(
+                                Icons.Outlined.Verified,
+                                "隐私政策",
+                                onClick = { openURL(getString(R.string.privacy)) }
+                            )
+                            // --------------------------
                             MenuDefaults.Divider()
                             SettingGroupTitle("开放源代码许可")
                             LICENSES.forEach {
