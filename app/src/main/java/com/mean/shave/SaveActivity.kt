@@ -56,6 +56,7 @@ class SaveActivity : ComponentActivity() {
             viewModel.state.collect {
                 if (it == State.Success) {
                     Toast.makeText(this@SaveActivity, "文件保存成功", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
             }
         }
@@ -68,14 +69,10 @@ class SaveActivity : ComponentActivity() {
 
             ShaveTheme {
                 if (showAgreement) {
-                    AgreementDialog(
-                        context = this,
-                        onAgree = {
-                            showAgreement = false
-                            save()
-                        },
-                        onDisagree = { finish() }
-                    )
+                    AgreementDialog(context = this, onAgree = {
+                        showAgreement = false
+                        save()
+                    }, onDisagree = { finish() })
                 } else {
                     AlertDialog(
                         properties = DialogProperties(dismissOnClickOutside = false),
@@ -134,9 +131,7 @@ class SaveActivity : ComponentActivity() {
                                 State.Text -> {
                                     OutlinedTextField(
                                         label = { Text("文本") },
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .padding(HORIZONTAL_MARGIN),
+                                        modifier = Modifier.fillMaxWidth().padding(HORIZONTAL_MARGIN),
                                         value = text ?: "",
                                         onValueChange = { viewModel.setText(it) }
                                     )
@@ -176,13 +171,11 @@ class SaveActivity : ComponentActivity() {
                 } else {
                     viewModel.setState(State.Others)
                     if (viewModel.sourceUri != null && viewModel.sourceUri!!.path != null) {
-                        val filename =
-                            contentResolver.query(viewModel.sourceUri!!, null, null, null, null)
-                                ?.use {
-                                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                                    it.moveToFirst()
-                                    it.getString(index)
-                                }
+                        val filename = contentResolver.query(viewModel.sourceUri!!, null, null, null, null)?.use {
+                            val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                            it.moveToFirst()
+                            it.getString(index)
+                        }
                         saveLauncher?.launch(filename)
                     }
                 }
@@ -199,13 +192,10 @@ class SaveActivity : ComponentActivity() {
      */
     private fun save(uri: Uri?) {
         if (uri != null) {
-            lifecycleScope.launch {
-                if (viewModel.state.value == State.Text) {
-                    viewModel.save(viewModel.text.value ?: "", uri)
-                } else {
-                    viewModel.sourceUri?.let { sourceUri -> viewModel.save(sourceUri, uri) }
-                }
-                finish()
+            if (viewModel.state.value == State.Text) {
+                viewModel.save(viewModel.text.value ?: "", uri)
+            } else {
+                viewModel.sourceUri?.let { sourceUri -> viewModel.save(sourceUri, uri) }
             }
         } else {
             viewModel.setError("选择文件失败")
