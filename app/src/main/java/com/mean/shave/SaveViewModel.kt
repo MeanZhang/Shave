@@ -6,10 +6,12 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Parcelable
+import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.elvishew.xlog.XLog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +21,7 @@ class SaveViewModel(intent: Intent) : ViewModel() {
     private val _state = MutableStateFlow(State.Launching)
     private val _text = MutableStateFlow<String?>(null)
     private val _error = MutableStateFlow("")
+    private val _progress = MutableStateFlow<Float?>(null)
 
     val state: StateFlow<State>
         get() = _state
@@ -26,6 +29,8 @@ class SaveViewModel(intent: Intent) : ViewModel() {
         get() = _text
     val error: StateFlow<String>
         get() = _error
+    val progress: StateFlow<Float?>
+        get() = _progress
 
     val sourceUri = if (Build.VERSION.SDK_INT >= 33) {
         intent.getParcelableExtra(Intent.EXTRA_STREAM, Parcelable::class.java)
@@ -43,8 +48,27 @@ class SaveViewModel(intent: Intent) : ViewModel() {
                 if (inputStream != null) {
                     App.context.contentResolver.openOutputStream(uri).use { outputStream ->
                         if (outputStream != null) {
-                            inputStream.copyTo(outputStream)
+                            val totalBytes =
+                                App.context.contentResolver.query(sourceUri, null, null, null, null)
+                                    ?.use {
+                                        val index = it.getColumnIndex(OpenableColumns.SIZE)
+                                        it.moveToFirst()
+                                        it.getLong(index)
+                                    }
+                            XLog.d("file size: %d", totalBytes)
+                            var bytesCopied: Long = 0
+                            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                            var bytes = inputStream.read(buffer)
+                            while (bytes >= 0) {
+                                outputStream.write(buffer, 0, bytes)
+                                bytesCopied += bytes
+                                totalBytes?.let {
+                                    _progress.value = bytesCopied.toFloat() / totalBytes
+                                }
+                                bytes = inputStream.read(buffer)
+                            }
                             setState(State.Success)
+                            XLog.d("文件保存成功")
                         } else {
                             setError("无法打开文件")
                         }

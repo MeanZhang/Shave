@@ -10,13 +10,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.lifecycleScope
@@ -65,6 +65,7 @@ class SaveActivity : ComponentActivity() {
             val state by viewModel.state.collectAsState()
             val text by viewModel.text.collectAsState()
             val error by viewModel.error.collectAsState()
+            val progress by viewModel.progress.collectAsState()
             var showAgreement by remember { mutableStateOf(App.isFirstLaunch) }
 
             ShaveTheme {
@@ -131,18 +132,31 @@ class SaveActivity : ComponentActivity() {
                                 State.Text -> {
                                     OutlinedTextField(
                                         label = { Text("文本") },
-                                        modifier = Modifier.fillMaxWidth().padding(HORIZONTAL_MARGIN),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(HORIZONTAL_MARGIN),
                                         value = text ?: "",
                                         onValueChange = { viewModel.setText(it) }
                                     )
                                 }
 
                                 State.Saving, State.Others -> {
-                                    Box(
-                                        contentAlignment = Alignment.Center,
-                                        modifier = Modifier.fillMaxWidth()
-                                    ) {
-                                        CircularProgressIndicator(Modifier.size(64.dp))
+                                    if (progress != null) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            LinearProgressIndicator(
+                                                progress = progress!!,
+                                                modifier = Modifier
+                                                    .weight(1f)
+                                                    .padding(end = 4.dp)
+                                            )
+                                            Text(
+                                                "${(progress!! * 100).toInt()}%".padStart(4),
+                                                maxLines = 1,
+                                                fontFamily = FontFamily.Monospace
+                                            )
+                                        }
+                                    } else {
+                                        LinearProgressIndicator()
                                     }
                                 }
 
@@ -171,11 +185,13 @@ class SaveActivity : ComponentActivity() {
                 } else {
                     viewModel.setState(State.Others)
                     if (viewModel.sourceUri != null && viewModel.sourceUri!!.path != null) {
-                        val filename = contentResolver.query(viewModel.sourceUri!!, null, null, null, null)?.use {
-                            val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                            it.moveToFirst()
-                            it.getString(index)
-                        }
+                        val filename =
+                            contentResolver.query(viewModel.sourceUri!!, null, null, null, null)
+                                ?.use {
+                                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                                    it.moveToFirst()
+                                    it.getString(index)
+                                }
                         saveLauncher?.launch(filename)
                     }
                 }
