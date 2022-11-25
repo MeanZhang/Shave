@@ -52,7 +52,7 @@ fun AgreementDialog(
                     append("欢迎使用享存。\n\n我们将通过")
                 }
                 // TODO: 将来用withAnnotation替代
-                pushStringAnnotation("AGREEMENT", stringResource(R.string.agreement))
+                pushStringAnnotation("AGREEMENT", stringResource(R.string.website) + "/agreement")
                 withStyle(
                     SpanStyle(
                         fontWeight = FontWeight.SemiBold,
@@ -66,7 +66,7 @@ fun AgreementDialog(
                 withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
                     append("、")
                 }
-                pushStringAnnotation("PRIVACY", stringResource(R.string.privacy))
+                pushStringAnnotation("PRIVACY", stringResource(R.string.website) + "/privacy")
                 withStyle(
                     SpanStyle(
                         fontWeight = FontWeight.SemiBold,

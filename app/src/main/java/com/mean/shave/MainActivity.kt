@@ -1,45 +1,34 @@
 package com.mean.shave
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Feedback
+import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.Verified
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
-import androidx.compose.material3.rememberTopAppBarScrollState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -67,16 +56,24 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ShaveTheme {
-                val decayAnimationSpec = rememberSplineBasedDecay<Float>()
-                val state = rememberTopAppBarScrollState()
-                val scrollBehavior = remember(decayAnimationSpec) {
-                    TopAppBarDefaults.exitUntilCollapsedScrollBehavior(decayAnimationSpec, state)
-                }
+                val state = rememberTopAppBarState()
+                val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(state)
                 var showAgreement by remember { mutableStateOf(App.isFirstLaunch) }
                 Scaffold(
-                    topBar = { TopBar(scrollBehavior) },
-                    modifier = Modifier
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    topBar = {
+                        LargeTopAppBar(
+                            title = { Text(text = stringResource(id = R.string.app_name)) },
+                            navigationIcon = {
+                                Icon(
+                                    ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
+                                    stringResource(R.string.app_name),
+                                    Modifier.size(60.dp)
+                                )
+                            },
+                            scrollBehavior = scrollBehavior
+                        )
+                    },
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
                 ) { contentPadding ->
                     if (showAgreement) {
                         AgreementDialog(
@@ -89,7 +86,7 @@ class MainActivity : ComponentActivity() {
                             Modifier
                                 .verticalScroll(rememberScrollState())
                                 .padding(contentPadding)
-                                .padding(WindowInsets.navigationBars.asPaddingValues())
+//                                .padding(WindowInsets.navigationBars.asPaddingValues())
                                 .fillMaxSize()
                         ) {
                             // --------------------------
@@ -115,39 +112,35 @@ class MainActivity : ComponentActivity() {
                                     Icon(
                                         ImageVector.vectorResource(R.drawable.github),
                                         "Github 仓库",
-                                        modifier = Modifier
-                                            .size(24.dp)
+                                        modifier = Modifier.size(24.dp)
                                     )
                                 },
                                 modifier = Modifier.clickable { openURL(getString(R.string.github_repo)) }
                             )
                             // --------------------------
-                            MenuDefaults.Divider()
+                            Divider()
                             SettingGroupTitle("帮助与反馈")
-                            SettingItem(
-                                icon = Icons.Outlined.Feedback,
-                                title = "反馈",
-                                onClick = {
-                                    val uri = Uri.parse(getString(R.string.feedback_url))
-                                    val intent = Intent(Intent.ACTION_VIEW, uri)
-                                    startActivity(intent)
-                                }
-                            )
+                            SettingItem(icon = Icons.Outlined.Help, title = "帮助", onClick = {
+                                openURL(getString(R.string.website))
+                            })
+                            SettingItem(icon = Icons.Outlined.Feedback, title = "反馈", onClick = {
+                                openURL(getString(R.string.feedback_url))
+                            })
                             // --------------------------
-                            MenuDefaults.Divider()
+                            Divider()
                             SettingGroupTitle("隐私")
                             SettingItem(
                                 Icons.Outlined.Description,
                                 "服务协议",
-                                onClick = { openURL(getString(R.string.agreement)) }
+                                onClick = { openURL(getString(R.string.website) + "/agreement") }
                             )
                             SettingItem(
                                 Icons.Outlined.Verified,
                                 "隐私政策",
-                                onClick = { openURL(getString(R.string.privacy)) }
+                                onClick = { openURL(getString(R.string.website) + "/privacy") }
                             )
                             // --------------------------
-                            MenuDefaults.Divider()
+                            Divider()
                             SettingGroupTitle("开放源代码许可")
                             LICENSES.forEach {
                                 LicenseItem(context = this@MainActivity, license = it)
@@ -157,34 +150,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@Composable
-fun TopBar(
-    scrollBehavior: TopAppBarScrollBehavior
-) {
-    val topBarColors = TopAppBarDefaults.largeTopAppBarColors()
-    val scrollFraction = scrollBehavior.scrollFraction
-    val statusBarColor by topBarColors.containerColor(scrollFraction)
-    Column {
-        Spacer(
-            modifier = Modifier
-                .windowInsetsTopHeight(WindowInsets.statusBars)
-                .fillMaxWidth()
-                .background(statusBarColor)
-        )
-        LargeTopAppBar(
-            title = { Text(stringResource(R.string.app_name)) },
-            navigationIcon = {
-                Icon(
-                    ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-                    stringResource(R.string.app_name),
-                    Modifier.size(60.dp)
-                )
-            },
-            scrollBehavior = scrollBehavior
-        )
     }
 }
 
@@ -248,7 +213,13 @@ private val LICENSES = listOf(
         "XLog",
         "https://github.com/elvishew/xLog",
         "Apache License 2.0"
-    )
+    ),
+    License(
+        "Spotless",
+        "https://github.com/diffplug/spotless",
+        "Apache License 2.0"
+    ),
+    License("ktlint", "https://github.com/pinterest/ktlint", "MIT License")
 ).sortedBy { it.name }
 
 data class License(val name: String, val url: String, val license: String)

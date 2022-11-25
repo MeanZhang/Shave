@@ -5,7 +5,6 @@
     <string name="github_page">https://github.com/MeanZhang</string>
     <string name="developer_introduction">一个业余开发者</string>
     <string name="github_repo">https://github.com/MeanZhang/Shave</string>
-    <string name="agreement">https://shaveapp.vercel.app/agreement</string>
-    <string name="privacy">https://shaveapp.vercel.app/privacy</string>
     <string name="feedback_url">https://support.qq.com/product/414607</string>
+    <string name="website">https://shave.netlify.app</string>
 </resources>
