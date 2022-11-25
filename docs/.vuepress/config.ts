@@ -1,4 +1,4 @@
-import { defaultTheme, defineUserConfig } from "vuepress-vite";
+import { defaultTheme, defineUserConfig } from "vuepress";
 
 export default defineUserConfig({
   lang: "zh-CN",
@@ -15,6 +15,10 @@ export default defineUserConfig({
     lastUpdatedText: "上次更新于",
     contributorsText: "贡献者",
     navbar: [
+      {
+        text: "使用帮助",
+        link: "/help",
+      },
       {
         text: "服务协议",
         link: "/agreement",
