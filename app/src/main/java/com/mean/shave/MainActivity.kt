@@ -1,6 +1,5 @@
 package com.mean.shave
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,12 +23,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,9 +41,12 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.mean.shave.ui.components.AgreementDialog
+import com.mean.shave.ui.components.License
+import com.mean.shave.ui.components.LicenseItem
+import com.mean.shave.ui.components.SettingGroupTitle
+import com.mean.shave.ui.components.SettingItem
 import com.mean.shave.ui.theme.ShaveTheme
 
-val HORIZONTAL_MARGIN = 16.dp
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -86,7 +86,6 @@ class MainActivity : ComponentActivity() {
                             Modifier
                                 .verticalScroll(rememberScrollState())
                                 .padding(contentPadding)
-//                                .padding(WindowInsets.navigationBars.asPaddingValues())
                                 .fillMaxSize()
                         ) {
                             // --------------------------
@@ -130,19 +129,19 @@ class MainActivity : ComponentActivity() {
                             Divider()
                             SettingGroupTitle("隐私")
                             SettingItem(
-                                Icons.Outlined.Description,
                                 "服务协议",
+                                Icons.Outlined.Description,
                                 onClick = { openURL(getString(R.string.website) + "/agreement") }
                             )
                             SettingItem(
-                                Icons.Outlined.Verified,
                                 "隐私政策",
+                                Icons.Outlined.Verified,
                                 onClick = { openURL(getString(R.string.website) + "/privacy") }
                             )
                             // --------------------------
                             Divider()
                             SettingGroupTitle("开放源代码许可")
-                            LICENSES.forEach {
+                            licenses.forEach {
                                 LicenseItem(context = this@MainActivity, license = it)
                             }
                         }
@@ -151,75 +150,33 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private val licenses = listOf(
+        License(
+            "Android Jetpack",
+            "https://github.com/androidx/androidx",
+            "Apache License 2.0"
+        ),
+        License(
+            "Kotlin",
+            "https://github.com/JetBrains/kotlin",
+            "Apache License 2.0"
+        ),
+        License(
+            "Material Components for Android",
+            "https://github.com/material-components/material-components-android",
+            "Apache License 2.0"
+        ),
+        License(
+            "XLog",
+            "https://github.com/elvishew/xLog",
+            "Apache License 2.0"
+        ),
+        License(
+            "Spotless",
+            "https://github.com/diffplug/spotless",
+            "Apache License 2.0"
+        ),
+        License("ktlint", "https://github.com/pinterest/ktlint", "MIT License")
+    ).sortedBy { it.name }
 }
-
-@Composable
-fun SettingGroupTitle(title: String) {
-    Text(
-        text = title,
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
-            .padding(
-                horizontal = HORIZONTAL_MARGIN
-            )
-            .padding(top = 28.dp, bottom = 12.dp)
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun SettingItem(
-    icon: ImageVector,
-    title: String,
-    description: String? = null,
-    onClick: () -> Unit = {}
-) {
-    ListItem(
-        headlineText = { Text(title) },
-        supportingText = { description?.let { Text(it) } },
-        leadingContent = { Icon(icon, title) },
-        modifier = Modifier.clickable { onClick() }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun LicenseItem(context: Context?, license: License) {
-    ListItem(
-        headlineText = { Text(license.name) },
-        supportingText = { Text(license.url + "\n" + license.license) },
-        modifier = Modifier.clickable { context?.openURL(license.url) }
-    )
-}
-
-private val LICENSES = listOf(
-    License(
-        "Android Jetpack",
-        "https://github.com/androidx/androidx",
-        "Apache License 2.0"
-    ),
-    License(
-        "Kotlin",
-        "https://github.com/JetBrains/kotlin",
-        "Apache License 2.0"
-    ),
-    License(
-        "Material Components for Android",
-        "https://github.com/material-components/material-components-android",
-        "Apache License 2.0"
-    ),
-    License(
-        "XLog",
-        "https://github.com/elvishew/xLog",
-        "Apache License 2.0"
-    ),
-    License(
-        "Spotless",
-        "https://github.com/diffplug/spotless",
-        "Apache License 2.0"
-    ),
-    License("ktlint", "https://github.com/pinterest/ktlint", "MIT License")
-).sortedBy { it.name }
-
-data class License(val name: String, val url: String, val license: String)

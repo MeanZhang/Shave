@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
+import com.mean.shave.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.shave.ui.components.AgreementDialog
 import com.mean.shave.ui.theme.ShaveTheme
 import kotlinx.coroutines.launch
