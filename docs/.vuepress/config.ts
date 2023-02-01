@@ -8,6 +8,7 @@ export default defineUserConfig({
 
   theme: defaultTheme({
     logo: "/images/logo.svg",
+    logoDark: "/images/logo-dark.svg",
     repo: "MeanZhang/Shave",
     docsBranch: "main",
     docsDir: "docs",

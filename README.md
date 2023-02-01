@@ -1,14 +1,6 @@
----
-home: true
-heroImage: /images/logo.svg
-heroImageDark: /images/logo-dark.svg
-heroText: 享存
-tagline: 一款可以将分享内容保存为文件的应用
-actions:
-  - text: 使用帮助
-    link: /help
-footer: Copyright © 2022-2023 Mean
----
+<img src="docs/images/logo.svg" alt="logo" width="100" height="100" align="right" />
+
+# 享存
 
 <p align="center">
   <a href="https://developer.android.google.cn/jetpack/compose" alt="Jetpack Compose">
@@ -29,6 +21,6 @@ footer: Copyright © 2022-2023 Mean
 
 使用 Jetpack Compose 构建，采用 Material You 设计。
 
-| 主界面                     | 文本分享                               | 分享菜单                               |
-| -------------------------- | -------------------------------------- | -------------------------------------- |
-| ![home](./images/home.png) | ![share-text](./images/share-text.jpg) | ![share-menu](./images/share-menu.png) |
+| 主界面                   | 文本分享                             | 分享菜单                             |
+| ------------------------ | ------------------------------------ | ------------------------------------ |
+| ![home](docs/images/home.png) | ![share-text](docs/images/share-text.jpg) | ![share-menu](docs/images/share-menu.png) |
