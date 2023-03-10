@@ -17,6 +17,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Help
+import androidx.compose.material.icons.outlined.NewReleases
+import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -90,6 +92,11 @@ class MainActivity : ComponentActivity() {
                         ) {
                             // --------------------------
                             SettingGroupTitle("开发者")
+                            SettingItem(
+                                icon = Icons.Outlined.NewReleases,
+                                title = stringResource(R.string.version),
+                                description = BuildConfig.VERSION_NAME,
+                            )
                             ListItem(
                                 headlineText = { Text("Mean") },
                                 supportingText = { Text(stringResource(R.string.developer_introduction)) },
@@ -135,7 +142,7 @@ class MainActivity : ComponentActivity() {
                             )
                             SettingItem(
                                 "隐私政策",
-                                Icons.Outlined.Verified,
+                                Icons.Outlined.PrivacyTip,
                                 onClick = { openURL(getString(R.string.website) + "/privacy") }
                             )
                             // --------------------------

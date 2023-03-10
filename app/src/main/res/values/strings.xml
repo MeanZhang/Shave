@@ -7,4 +7,5 @@
     <string name="github_repo">https://github.com/MeanZhang/Shave</string>
     <string name="feedback_url">https://support.qq.com/product/414607</string>
     <string name="website">https://shave.netlify.app</string>
+    <string name="version">版本</string>
 </resources>
