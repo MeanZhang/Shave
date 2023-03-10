@@ -19,7 +19,6 @@ import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.NewReleases
 import androidx.compose.material.icons.outlined.PrivacyTip
-import androidx.compose.material.icons.outlined.Verified
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -95,7 +94,7 @@ class MainActivity : ComponentActivity() {
                             SettingItem(
                                 icon = Icons.Outlined.NewReleases,
                                 title = stringResource(R.string.version),
-                                description = BuildConfig.VERSION_NAME,
+                                description = BuildConfig.VERSION_NAME
                             )
                             ListItem(
                                 headlineText = { Text("Mean") },
