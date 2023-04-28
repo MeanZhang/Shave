@@ -17,6 +17,6 @@ fun LicenseItem(context: Context?, license: License) {
     ListItem(
         headlineText = { Text(license.name) },
         supportingText = { Text(license.url + "\n" + license.license) },
-        modifier = Modifier.clickable { context?.openURL(license.url) }
+        modifier = Modifier.clickable { context?.openURL(license.url) },
     )
 }

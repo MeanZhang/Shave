@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
 fun AgreementDialog(
     context: Context,
     onAgree: () -> Unit,
-    onDisagree: () -> Unit
+    onDisagree: () -> Unit,
 ) {
     val scope = rememberCoroutineScope()
     AlertDialog(
@@ -57,8 +57,8 @@ fun AgreementDialog(
                     SpanStyle(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary,
-                        textDecoration = TextDecoration.Underline
-                    )
+                        textDecoration = TextDecoration.Underline,
+                    ),
                 ) {
                     append("《享存软件许可及服务协议》")
                 }
@@ -71,8 +71,8 @@ fun AgreementDialog(
                     SpanStyle(
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary,
-                        textDecoration = TextDecoration.Underline
-                    )
+                        textDecoration = TextDecoration.Underline,
+                    ),
                 ) {
                     append("《享存隐私政策》")
                 }
@@ -81,7 +81,7 @@ fun AgreementDialog(
                     append(
                         "帮助您了解我们处理个人信息的方式及您享有的权利。\n\n" +
                             "保护用户信息是我们的一项基本原则，我们不会收集、使用、储存和分享您的任何相关信息。\n\n" +
-                            "点击“同意”按钮，即表示您同意上述协议和政策，若不同意，请点击“退出”按钮退出享存。"
+                            "点击“同意”按钮，即表示您同意上述协议和政策，若不同意，请点击“退出”按钮退出享存。",
                     )
                 }
             }
@@ -91,15 +91,15 @@ fun AgreementDialog(
                     annotatedString.getStringAnnotations(
                         "AGREEMENT",
                         start = position,
-                        end = position
+                        end = position,
                     ).firstOrNull()?.let { context.openURL(it.item) }
                     annotatedString.getStringAnnotations(
                         "PRIVACY",
                         start = position,
-                        end = position
+                        end = position,
                     ).firstOrNull()?.let { context.openURL(it.item) }
-                }
+                },
             )
-        }
+        },
     )
 }

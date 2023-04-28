@@ -48,7 +48,7 @@ class SaveActivity : ComponentActivity() {
         XLog.d("action: %s", intent.action)
         XLog.d("intent type: %s", intent.type)
         saveLauncher = registerForActivityResult(
-            ActivityResultContracts.CreateDocument(intent.type ?: "*/*")
+            ActivityResultContracts.CreateDocument(intent.type ?: "*/*"),
         ) { save(it) }
 
         if (!App.isFirstLaunch && viewModel.state.value == State.Launching) {
@@ -87,7 +87,7 @@ class SaveActivity : ComponentActivity() {
                                     State.Saving -> "保存中"
                                     State.Error -> "错误"
                                     else -> stringResource(R.string.app_name)
-                                }
+                                },
                             )
                         },
                         onDismissRequest = { finish() },
@@ -139,7 +139,7 @@ class SaveActivity : ComponentActivity() {
                                             .fillMaxWidth()
                                             .padding(HORIZONTAL_MARGIN),
                                         value = text ?: "",
-                                        onValueChange = { viewModel.setText(it) }
+                                        onValueChange = { viewModel.setText(it) },
                                     )
                                 }
 
@@ -150,12 +150,12 @@ class SaveActivity : ComponentActivity() {
                                                 progress = progress!!,
                                                 modifier = Modifier
                                                     .weight(1f)
-                                                    .padding(end = 4.dp)
+                                                    .padding(end = 4.dp),
                                             )
                                             Text(
                                                 "${(progress!! * 100).toInt()}%".padStart(4),
                                                 maxLines = 1,
-                                                fontFamily = FontFamily.Monospace
+                                                fontFamily = FontFamily.Monospace,
                                             )
                                         }
                                     } else {
@@ -170,7 +170,7 @@ class SaveActivity : ComponentActivity() {
                                 else -> {
                                 }
                             }
-                        }
+                        },
                     )
                 }
             }

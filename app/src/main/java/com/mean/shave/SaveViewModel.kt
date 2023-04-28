@@ -35,7 +35,8 @@ class SaveViewModel(intent: Intent) : ViewModel() {
     val sourceUri = if (Build.VERSION.SDK_INT >= 33) {
         intent.getParcelableExtra(Intent.EXTRA_STREAM, Parcelable::class.java)
     } else {
-        @Suppress("DEPRECATION") intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        @Suppress("DEPRECATION")
+        intent.getParcelableExtra(Intent.EXTRA_STREAM)
     } as? Uri ?: intent.data
 
     /**
@@ -109,7 +110,7 @@ class SaveViewModel(intent: Intent) : ViewModel() {
         Toast.makeText(
             App.context,
             "已复制到剪贴板",
-            Toast.LENGTH_SHORT
+            Toast.LENGTH_SHORT,
         ).show()
     }
 
