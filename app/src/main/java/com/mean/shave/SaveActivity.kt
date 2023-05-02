@@ -67,8 +67,8 @@ class SaveActivity : ComponentActivity() {
             ActivityResultContracts.CreateDocument(intent.type ?: "*/*"),
         ) {
             if (it == null) {
-                viewModel.setError("未选择文件")
-                Toast.makeText(this, "未选择文件", Toast.LENGTH_SHORT).show()
+                viewModel.setError(getString(R.string.no_file_selected))
+                Toast.makeText(this, getString(R.string.no_file_selected), Toast.LENGTH_SHORT).show()
             } else {
                 save(it, sourceUri)
             }
@@ -98,8 +98,8 @@ class SaveActivity : ComponentActivity() {
                         title = {
                             Text(
                                 when (state) {
-                                    State.Saving -> "保存中"
-                                    State.Error -> "错误"
+                                    State.Saving -> stringResource(R.string.saving)
+                                    State.Error -> stringResource(R.string.error)
                                     else -> stringResource(R.string.app_name)
                                 },
                             )
@@ -111,13 +111,13 @@ class SaveActivity : ComponentActivity() {
                                     TextButton(onClick = {
                                         saveLauncher.launch((text ?: "").take(10) + ".txt")
                                     }) {
-                                        Text("保存")
+                                        Text(stringResource(R.string.save))
                                     }
                                 }
 
                                 State.Error, State.File -> {
                                     TextButton(onClick = { finish() }) {
-                                        Text("退出")
+                                        Text(stringResource(R.string.exit))
                                     }
                                 }
 
@@ -131,13 +131,13 @@ class SaveActivity : ComponentActivity() {
                                         copy(text ?: "")
                                         finish()
                                     }) {
-                                        Text("复制")
+                                        Text(stringResource(R.string.copy))
                                     }
                                 }
 
                                 State.Error -> {
                                     TextButton(onClick = { saveOrCopy(saveLauncher, sourceUri) }) {
-                                        Text("重试")
+                                        Text(stringResource(R.string.retry))
                                     }
                                 }
 
@@ -148,7 +148,7 @@ class SaveActivity : ComponentActivity() {
                             when (state) {
                                 State.Text -> {
                                     OutlinedTextField(
-                                        label = { Text("文本") },
+                                        label = { Text(stringResource(R.string.text)) },
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(HORIZONTAL_MARGIN),
@@ -182,7 +182,7 @@ class SaveActivity : ComponentActivity() {
                                 }
 
                                 State.Success -> {
-                                    Text("保存成功")
+                                    Text(stringResource(R.string.save_success))
                                 }
                             }
                         },
@@ -222,7 +222,7 @@ class SaveActivity : ComponentActivity() {
         manager.setPrimaryClip(clipData)
         Toast.makeText(
             App.context,
-            "已复制到剪贴板",
+            getString(R.string.copy_success),
             Toast.LENGTH_SHORT,
         ).show()
     }
@@ -249,11 +249,11 @@ class SaveActivity : ComponentActivity() {
                     it.write(text.toByteArray())
                     viewModel.setState(State.Success)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@SaveActivity, "保存成功", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@SaveActivity, getString(R.string.save_success), Toast.LENGTH_SHORT).show()
                     }
                     finish()
                 } else {
-                    viewModel.setError("无法打开文件")
+                    viewModel.setError(getString(R.string.unable_to_open_the_file))
                 }
             }
             viewModel.setState(State.Success)
@@ -291,17 +291,17 @@ class SaveActivity : ComponentActivity() {
                             }
                             viewModel.setState(State.Success)
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(this@SaveActivity, "保存成功", Toast.LENGTH_SHORT)
+                                Toast.makeText(this@SaveActivity, getString(R.string.save_success), Toast.LENGTH_SHORT)
                                     .show()
                             }
                             XLog.d("保存成功")
                             finish()
                         } else {
-                            viewModel.setError("无法打开文件")
+                            viewModel.setError(getString(R.string.unable_to_open_the_file))
                         }
                     }
                 } else {
-                    viewModel.setError("无法打开源文件")
+                    viewModel.setError(getString(R.string.unable_to_open_source_file))
                 }
             }
         }

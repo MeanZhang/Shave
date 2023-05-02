@@ -37,22 +37,22 @@ fun AgreementDialog(
                 }
                 onAgree()
             }) {
-                Text("同意")
+                Text(stringResource(R.string.agree))
             }
         },
         dismissButton = {
             TextButton(onClick = { onDisagree() }) {
-                Text("退出")
+                Text(stringResource(R.string.exit))
             }
         },
-        title = { Text("服务协议和隐私政策") },
+        title = { Text(stringResource(R.string.service_agreement_and_privacy_policy)) },
         text = {
             val annotatedString = buildAnnotatedString {
                 withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
-                    append("欢迎使用享存。\n\n我们将通过")
+                    append(stringResource(R.string.welcome1))
                 }
                 // TODO: 将来用withAnnotation替代
-                pushStringAnnotation("AGREEMENT", stringResource(R.string.website) + "/agreement")
+                pushStringAnnotation("AGREEMENT", stringResource(R.string.url_website) + "/agreement")
                 withStyle(
                     SpanStyle(
                         fontWeight = FontWeight.SemiBold,
@@ -60,13 +60,13 @@ fun AgreementDialog(
                         textDecoration = TextDecoration.Underline,
                     ),
                 ) {
-                    append("《享存软件许可及服务协议》")
+                    append(stringResource(R.string.title_service_agreement))
                 }
                 pop()
                 withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
-                    append("、")
+                    append(stringResource(R.string.sign_caesura))
                 }
-                pushStringAnnotation("PRIVACY", stringResource(R.string.website) + "/privacy")
+                pushStringAnnotation("PRIVACY", stringResource(R.string.url_website) + "/privacy")
                 withStyle(
                     SpanStyle(
                         fontWeight = FontWeight.SemiBold,
@@ -74,15 +74,11 @@ fun AgreementDialog(
                         textDecoration = TextDecoration.Underline,
                     ),
                 ) {
-                    append("《享存隐私政策》")
+                    append(stringResource(R.string.title_privacy_policy))
                 }
                 pop()
                 withStyle(SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
-                    append(
-                        "帮助您了解我们处理个人信息的方式及您享有的权利。\n\n" +
-                            "保护用户信息是我们的一项基本原则，我们不会收集、使用、储存和分享您的任何相关信息。\n\n" +
-                            "点击“同意”按钮，即表示您同意上述协议和政策，若不同意，请点击“退出”按钮退出享存。",
-                    )
+                    append(stringResource(R.string.welcome2))
                 }
             }
             ClickableText(

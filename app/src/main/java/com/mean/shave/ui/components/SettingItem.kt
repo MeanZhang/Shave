@@ -21,7 +21,7 @@ fun SettingItem(
         ListItem(
             headlineText = { Text(title) },
             supportingText = { description?.let { Text(it) } },
-            leadingContent = { Icon(icon, title) },
+            leadingContent = { Icon(icon, null) },
             modifier = Modifier.clickable { onClick() },
         )
     } else {

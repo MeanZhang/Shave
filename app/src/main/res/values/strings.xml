@@ -1,13 +1,39 @@
 <resources>
     <string name="app_name">享存</string>
-    <string name="title_activity_settings">设置</string>
-    <string name="title_activity_save">保存</string>
-    <string name="github_page">https://github.com/MeanZhang</string>
+    <string name="settings">设置</string>
+    <string name="save">保存</string>
+    <string name="url_github_page" translatable="false">https://github.com/MeanZhang</string>
     <string name="developer_introduction">一个业余开发者</string>
-    <string name="github_repo">https://github.com/MeanZhang/Shave</string>
-    <string name="feedback_url">https://support.qq.com/product/414607</string>
-    <string name="website">https://shave.netlify.app</string>
+    <string name="url_github_repo" translatable="false">https://github.com/MeanZhang/Shave</string>
+    <string name="url_feedback" translatable="false">https://support.qq.com/product/414607</string>
+    <string name="url_website" translatable="false">https://shave.netlify.app</string>
     <string name="version">版本</string>
     <string name="about">关于</string>
-    <string name="developer_name">Mean</string>
+    <string name="developer_name" translatable="false">Mean</string>
+    <string name="no_file_selected">未选择文件</string>
+    <string name="saving">保存中</string>
+    <string name="error">错误</string>
+    <string name="exit">退出</string>
+    <string name="copy">复制</string>
+    <string name="retry" >重试</string>
+    <string name="text">文本</string>
+    <string name="save_success">保存成功</string>
+    <string name="copy_success">已复制到剪贴板</string>
+    <string name="unable_to_open_the_file">无法打开文件</string>
+    <string name="unable_to_open_source_file">无法打开源文件</string>
+    <string name="repository">仓库</string>
+    <string name="help_and_feedback">帮助与反馈</string>
+    <string name="help">帮助</string>
+    <string name="privacy">隐私</string>
+    <string name="service_agreement">服务协议</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="open_source_licenses">开放源代码许可</string>
+    <string name="feedback" >反馈</string>
+    <string name="agree">同意</string>
+    <string name="service_agreement_and_privacy_policy">服务协议和隐私政策</string>
+    <string name="welcome1">欢迎使用享存。\n\n我们将通过</string>
+    <string name="welcome2">帮助您了解我们处理个人信息的方式及您享有的权利。\n\n保护用户信息是我们的一项基本原则，我们不会收集、使用、储存和分享您的任何相关信息。\n\n点击“同意”按钮，即表示您同意上述协议和政策，若不同意，请点击“退出”按钮退出享存。</string>
+    <string name="title_service_agreement">《享存软件许可及服务协议》</string>
+    <string name="title_privacy_policy" >《享存隐私政策》</string>
+    <string name="sign_caesura">、</string>
 </resources>

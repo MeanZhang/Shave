@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Shave</string>
+    <string name="settings">Settings</string>
+    <string name="save">Save</string>
+    <string name="developer_introduction">An amateur developer</string>
+    <string name="version">Version</string>
+    <string name="about">About</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="saving">Saving</string>
+    <string name="error">Error</string>
+    <string name="exit">Exit</string>
+    <string name="copy">Copy</string>
+    <string name="retry">Retry</string>
+    <string name="text">Text</string>
+    <string name="save_success">Successfully saved</string>
+    <string name="copy_success">Copied to clipboard</string>
+    <string name="unable_to_open_the_file">Unable to open the file</string>
+    <string name="unable_to_open_source_file">Unable to open source file</string>
+    <string name="repository">Repository</string>
+    <string name="help">Help</string>
+    <string name="privacy">Privacy</string>
+    <string name="service_agreement">Service Agreement</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="open_source_licenses">Open Source Licenses</string>
+    <string name="help_and_feedback">Help &amp; Feedback</string>
+    <string name="feedback">Feedback</string>
+    <string name="agree">Agree</string>
+    <string name="service_agreement_and_privacy_policy">Service Agreement &amp; Privacy Policy</string>
+    <string name="welcome1">"Welcome to use Shave.\n\nWe will help you understand the way we process personal information and the rights you enjoy through the "</string>
+    <string name="welcome2">.\n\nProtecting user information is our fundamental principle, and we will not collect, use, store, or share any of your relevant information.\n\nBy clicking the \'Agree\' button, you agree to the above agreement and policy. If you do not agree, please click the \'Exit\' button to exit the shared storage.</string>
+    <string name="title_service_agreement">Shave Software License and Service Agreement</string>
+    <string name="title_privacy_policy">Shave Privacy Policy</string>
+    <string name="sign_caesura">", "</string>
+</resources>

@@ -12,7 +12,7 @@
         <activity
             android:name=".SaveActivity"
             android:exported="true"
-            android:label="@string/title_activity_save"
+            android:label="@string/save"
             android:theme="@style/Theme.Material3.DayNight.Dialog">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />

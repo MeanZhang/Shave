@@ -66,7 +66,7 @@ class MainActivity : ComponentActivity() {
                             navigationIcon = {
                                 Icon(
                                     ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-                                    stringResource(R.string.app_name),
+                                    null,
                                     Modifier.size(60.dp),
                                 )
                             },
@@ -101,51 +101,51 @@ class MainActivity : ComponentActivity() {
                                 leadingContent = {
                                     Image(
                                         painterResource(R.drawable.avatar),
-                                        "开发者头像",
+                                        null,
                                         modifier = Modifier
                                             .height(24.dp)
                                             .clip(CircleShape),
                                     )
                                 },
-                                modifier = Modifier.clickable { openURL(getString(R.string.github_page)) },
+                                modifier = Modifier.clickable { openURL(getString(R.string.url_github_page)) },
                             )
                             ListItem(
-                                headlineText = { Text("Github 仓库") },
-                                supportingText = { Text(stringResource(R.string.github_repo)) },
+                                headlineText = { Text("Github " + stringResource(R.string.repository)) },
+                                supportingText = { Text(stringResource(R.string.url_github_repo)) },
                                 leadingContent = {
                                     Icon(
                                         ImageVector.vectorResource(R.drawable.github),
-                                        "Github 仓库",
+                                        null,
                                         modifier = Modifier.size(24.dp),
                                     )
                                 },
-                                modifier = Modifier.clickable { openURL(getString(R.string.github_repo)) },
+                                modifier = Modifier.clickable { openURL(getString(R.string.url_github_repo)) },
                             )
                             // --------------------------
                             Divider()
-                            SettingGroupTitle("帮助与反馈")
-                            SettingItem(icon = Icons.Outlined.Help, title = "帮助", onClick = {
-                                openURL(getString(R.string.website))
+                            SettingGroupTitle(stringResource(R.string.help_and_feedback))
+                            SettingItem(icon = Icons.Outlined.Help, title = stringResource(R.string.help), onClick = {
+                                openURL(getString(R.string.url_website))
                             })
-                            SettingItem(icon = Icons.Outlined.Feedback, title = "反馈", onClick = {
-                                openURL(getString(R.string.feedback_url))
+                            SettingItem(icon = Icons.Outlined.Feedback, title = stringResource(R.string.feedback), onClick = {
+                                openURL(getString(R.string.url_feedback))
                             })
                             // --------------------------
                             Divider()
-                            SettingGroupTitle("隐私")
+                            SettingGroupTitle(stringResource(R.string.privacy))
                             SettingItem(
-                                "服务协议",
+                                stringResource(R.string.service_agreement),
                                 Icons.Outlined.Description,
-                                onClick = { openURL(getString(R.string.website) + "/agreement") },
+                                onClick = { openURL(getString(R.string.url_website) + "/agreement") },
                             )
                             SettingItem(
-                                "隐私政策",
+                                stringResource(R.string.privacy_policy),
                                 Icons.Outlined.PrivacyTip,
-                                onClick = { openURL(getString(R.string.website) + "/privacy") },
+                                onClick = { openURL(getString(R.string.url_website) + "/privacy") },
                             )
                             // --------------------------
                             Divider()
-                            SettingGroupTitle("开放源代码许可")
+                            SettingGroupTitle(stringResource(R.string.open_source_licenses))
                             licenses.forEach {
                                 LicenseItem(context = this@MainActivity, license = it)
                             }
