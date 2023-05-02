@@ -8,4 +8,6 @@
     <string name="feedback_url">https://support.qq.com/product/414607</string>
     <string name="website">https://shave.netlify.app</string>
     <string name="version">版本</string>
+    <string name="about">关于</string>
+    <string name="developer_name">Mean</string>
 </resources>

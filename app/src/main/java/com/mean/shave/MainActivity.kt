@@ -89,14 +89,14 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize(),
                         ) {
                             // --------------------------
-                            SettingGroupTitle("开发者")
+                            SettingGroupTitle(stringResource(R.string.about))
                             SettingItem(
                                 icon = Icons.Outlined.NewReleases,
                                 title = stringResource(R.string.version),
                                 description = BuildConfig.VERSION_NAME,
                             )
                             ListItem(
-                                headlineText = { Text("Mean") },
+                                headlineText = { Text(stringResource(R.string.developer_name)) },
                                 supportingText = { Text(stringResource(R.string.developer_introduction)) },
                                 leadingContent = {
                                     Image(

@@ -1,8 +1,12 @@
 package com.mean.shave
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.provider.OpenableColumns
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -36,32 +40,42 @@ import com.elvishew.xlog.XLog
 import com.mean.shave.ui.Constants.HORIZONTAL_MARGIN
 import com.mean.shave.ui.components.AgreementDialog
 import com.mean.shave.ui.theme.ShaveTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SaveActivity : ComponentActivity() {
     private val viewModel by viewModels<SaveViewModel> { SaveViewModelFactory(intent) }
-    private var saveLauncher: ActivityResultLauncher<String>? = null
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         XLog.d("action: %s", intent.action)
         XLog.d("intent type: %s", intent.type)
-        saveLauncher = registerForActivityResult(
-            ActivityResultContracts.CreateDocument(intent.type ?: "*/*"),
-        ) { save(it) }
 
-        if (!App.isFirstLaunch && viewModel.state.value == State.Launching) {
-            save()
+        val sourceUri = if (Build.VERSION.SDK_INT >= 33) {
+            intent.getParcelableExtra(Intent.EXTRA_STREAM, Parcelable::class.java)
+        } else {
+            @Suppress("DEPRECATION")
+            intent.getParcelableExtra(Intent.EXTRA_STREAM)
+        } as? Uri ?: intent.data
+
+        XLog.d("源文件 URI：$sourceUri")
+
+        val saveLauncher = registerForActivityResult(
+            ActivityResultContracts.CreateDocument(intent.type ?: "*/*"),
+        ) {
+            if (it == null) {
+                viewModel.setError("未选择文件")
+                Toast.makeText(this, "未选择文件", Toast.LENGTH_SHORT).show()
+            } else {
+                save(it, sourceUri)
+            }
         }
 
-        lifecycleScope.launch {
-            viewModel.state.collect {
-                if (it == State.Success) {
-                    Toast.makeText(this@SaveActivity, "文件保存成功", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            }
+        if (!App.isFirstLaunch && (viewModel.state.value == State.Text || viewModel.state.value == State.File)) {
+            saveOrCopy(saveLauncher, sourceUri)
         }
 
         setContent {
@@ -75,7 +89,7 @@ class SaveActivity : ComponentActivity() {
                 if (showAgreement) {
                     AgreementDialog(context = this, onAgree = {
                         showAgreement = false
-                        save()
+                        saveOrCopy(saveLauncher, sourceUri)
                     }, onDisagree = { finish() })
                 } else {
                     AlertDialog(
@@ -95,13 +109,13 @@ class SaveActivity : ComponentActivity() {
                             when (state) {
                                 State.Text -> {
                                     TextButton(onClick = {
-                                        saveLauncher?.launch((text ?: "").take(10) + ".txt")
+                                        saveLauncher.launch((text ?: "").take(10) + ".txt")
                                     }) {
                                         Text("保存")
                                     }
                                 }
 
-                                State.Error, State.Others -> {
+                                State.Error, State.File -> {
                                     TextButton(onClick = { finish() }) {
                                         Text("退出")
                                     }
@@ -114,7 +128,7 @@ class SaveActivity : ComponentActivity() {
                             when (state) {
                                 State.Text -> {
                                     TextButton(onClick = {
-                                        viewModel.copy(text ?: "")
+                                        copy(text ?: "")
                                         finish()
                                     }) {
                                         Text("复制")
@@ -122,7 +136,7 @@ class SaveActivity : ComponentActivity() {
                                 }
 
                                 State.Error -> {
-                                    TextButton(onClick = { save() }) {
+                                    TextButton(onClick = { saveOrCopy(saveLauncher, sourceUri) }) {
                                         Text("重试")
                                     }
                                 }
@@ -143,7 +157,7 @@ class SaveActivity : ComponentActivity() {
                                     )
                                 }
 
-                                State.Saving, State.Others -> {
+                                State.Saving, State.File -> {
                                     if (progress != null) {
                                         Row(verticalAlignment = Alignment.CenterVertically) {
                                             LinearProgressIndicator(
@@ -167,7 +181,8 @@ class SaveActivity : ComponentActivity() {
                                     Text(error)
                                 }
 
-                                else -> {
+                                State.Success -> {
+                                    Text("保存成功")
                                 }
                             }
                         },
@@ -177,47 +192,118 @@ class SaveActivity : ComponentActivity() {
         }
     }
 
-    private fun save() {
-        when (intent.action) {
-            Intent.ACTION_SEND, Intent.ACTION_VIEW -> {
-                if ("text/plain" == intent.type) {
-                    viewModel.setState(State.Text)
-                    if (viewModel.text.value == null) {
-                        viewModel.setText(intent.getStringExtra(Intent.EXTRA_TEXT))
-                    }
-                } else {
-                    viewModel.setState(State.Others)
-                    if (viewModel.sourceUri != null && viewModel.sourceUri!!.path != null) {
-                        val filename =
-                            contentResolver.query(viewModel.sourceUri!!, null, null, null, null)
-                                ?.use {
-                                    val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                                    it.moveToFirst()
-                                    it.getString(index)
-                                }
-                        saveLauncher?.launch(filename)
-                    }
-                }
-            }
-
-            else -> {
-                viewModel.setError("不支持的类型")
+    private fun saveOrCopy(saveLauncher: ActivityResultLauncher<String>, sourceUri: Uri?) {
+        // 文本类型
+        if (intent.type == "text/plain") {
+            viewModel.setState(State.Text)
+        } else {
+            viewModel.setState(State.File)
+            if (sourceUri != null && sourceUri.path != null) {
+                val filename =
+                    contentResolver.query(sourceUri, null, null, null, null)
+                        ?.use {
+                            val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                            it.moveToFirst()
+                            it.getString(index)
+                        }
+                XLog.d("启动文件选择器")
+                saveLauncher.launch(filename)
             }
         }
     }
 
     /**
-     * 将文件保存到 URI 中
+     * 复制文本到剪贴板
      */
-    private fun save(uri: Uri?) {
-        if (uri != null) {
-            if (viewModel.state.value == State.Text) {
-                viewModel.save(viewModel.text.value ?: "", uri)
-            } else {
-                viewModel.sourceUri?.let { sourceUri -> viewModel.save(sourceUri, uri) }
-            }
+    private fun copy(text: String) {
+        val manager =
+            App.context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clipData = ClipData.newPlainText("text", text)
+        manager.setPrimaryClip(clipData)
+        Toast.makeText(
+            App.context,
+            "已复制到剪贴板",
+            Toast.LENGTH_SHORT,
+        ).show()
+    }
+
+    /**
+     * 将文本或文件保存到 URI 中
+     */
+    private fun save(uri: Uri, sourceUri: Uri?) {
+        if (sourceUri == null) {
+            saveText(viewModel.text.value ?: "", uri)
         } else {
-            viewModel.setError("选择文件失败")
+            saveFile(sourceUri, uri)
+        }
+    }
+
+    /**
+     * 保存文本
+     */
+    private fun saveText(text: String, uri: Uri) {
+        viewModel.setState(State.Saving)
+        lifecycleScope.launch(Dispatchers.IO) {
+            contentResolver.openOutputStream(uri).use {
+                if (it != null) {
+                    it.write(text.toByteArray())
+                    viewModel.setState(State.Success)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(this@SaveActivity, "保存成功", Toast.LENGTH_SHORT).show()
+                    }
+                    finish()
+                } else {
+                    viewModel.setError("无法打开文件")
+                }
+            }
+            viewModel.setState(State.Success)
+        }
+    }
+
+    /**
+     * 保存文件
+     */
+    private fun saveFile(sourceUri: Uri, uri: Uri) {
+        viewModel.setState(State.Saving)
+        lifecycleScope.launch(Dispatchers.IO) {
+            App.context.contentResolver.openInputStream(sourceUri).use { inputStream ->
+                if (inputStream != null) {
+                    App.context.contentResolver.openOutputStream(uri).use { outputStream ->
+                        if (outputStream != null) {
+                            val totalBytes =
+                                App.context.contentResolver.query(sourceUri, null, null, null, null)
+                                    ?.use {
+                                        val index = it.getColumnIndex(OpenableColumns.SIZE)
+                                        it.moveToFirst()
+                                        it.getLong(index)
+                                    }
+                            XLog.d("file size: $totalBytes")
+                            var bytesCopied: Long = 0
+                            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+                            var bytes = inputStream.read(buffer)
+                            while (bytes >= 0) {
+                                outputStream.write(buffer, 0, bytes)
+                                bytesCopied += bytes
+                                totalBytes?.let {
+                                    viewModel.setProgress(bytesCopied.toFloat() / totalBytes)
+                                }
+                                bytes = inputStream.read(buffer)
+                            }
+                            viewModel.setState(State.Success)
+                            withContext(Dispatchers.Main) {
+                                Toast.makeText(this@SaveActivity, "保存成功", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                            XLog.d("保存成功")
+                            finish()
+                        } else {
+                            viewModel.setError("无法打开文件")
+                        }
+                    }
+                } else {
+                    viewModel.setError("无法打开源文件")
+                }
+            }
         }
     }
 }
