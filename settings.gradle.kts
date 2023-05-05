@@ -1,19 +1,18 @@
 pluginManagement {
     repositories {
-        maven { url("https://repo.nju.edu.cn/repository/maven-public/") }
-        maven { url("https://maven.aliyun.com/repository/gradle-plugin") }
-        gradlePluginPortal()
+        maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven { url("https://repo.nju.edu.cn/repository/maven-public/") }
+        maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
         google()
         mavenCentral()
     }
 }
 rootProject.name = "Shave"
-include ':app'
+include(":app")
