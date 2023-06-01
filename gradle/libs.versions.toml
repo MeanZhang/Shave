@@ -12,7 +12,7 @@ material-components = "1.8.0"
 xlog = "1.11.0"
 datastore = "1.0.0"
 fragment-ktx = "1.5.7"
-spotless = "6.18.0"
+spotless = "6.19.0"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
