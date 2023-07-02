@@ -96,8 +96,8 @@ class MainActivity : ComponentActivity() {
                                 description = BuildConfig.VERSION_NAME,
                             )
                             ListItem(
-                                headlineText = { Text(stringResource(R.string.developer_name)) },
-                                supportingText = { Text(stringResource(R.string.developer_introduction)) },
+                                headlineContent = { Text(stringResource(R.string.developer_name)) },
+                                supportingContent = { Text(stringResource(R.string.developer_introduction)) },
                                 leadingContent = {
                                     Image(
                                         painterResource(R.drawable.avatar),
@@ -110,8 +110,8 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.clickable { openURL(getString(R.string.url_github_page)) },
                             )
                             ListItem(
-                                headlineText = { Text("Github " + stringResource(R.string.repository)) },
-                                supportingText = { Text(stringResource(R.string.url_github_repo)) },
+                                headlineContent = { Text("Github " + stringResource(R.string.repository)) },
+                                supportingContent = { Text(stringResource(R.string.url_github_repo)) },
                                 leadingContent = {
                                     Icon(
                                         ImageVector.vectorResource(R.drawable.github),

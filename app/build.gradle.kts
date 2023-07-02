@@ -5,20 +5,22 @@ plugins {
 }
 
 android {
-    namespace="com.mean.shave"
-    compileSdk=33
+    namespace = "com.mean.shave"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId="com.mean.shave"
-        minSdk=23
-        targetSdk=33
-        versionCode=4
-        versionName="1.2.0"
+        applicationId = "com.mean.shave"
+        minSdk = 23
+        targetSdk = 34
+        versionCode = 5
+        versionName = "1.3.0"
 
-        testInstrumentationRunner="androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
-            useSupportLibrary=true
+            useSupportLibrary = true
         }
+
+        manifestPlaceholders["APP_NAME"] = "@string/app_name"
     }
 
     buildTypes {
@@ -31,21 +33,23 @@ android {
             )
         }
         debug {
-            versionNameSuffix="-debug"
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
+            manifestPlaceholders["APP_NAME"] = "享存（debug）"
         }
     }
     compileOptions {
-        sourceCompatibility=JavaVersion.VERSION_17
-        targetCompatibility=JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
         jvmTarget = "17"
     }
     buildFeatures {
-        compose=true
+        compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion="1.4.3"
+        kotlinCompilerExtensionVersion = "1.4.8"
     }
     packaging {
         resources {
