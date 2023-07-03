@@ -22,7 +22,7 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
-      - name: 检查并构建
+      - name: 构建
         run: chmod +x gradlew && ./gradlew assembleRelease
 
       - name: APK 签名
