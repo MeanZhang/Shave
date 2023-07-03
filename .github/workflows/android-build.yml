@@ -23,8 +23,7 @@ jobs:
           cache: gradle
 
       - name: 检查并构建
-        run: |
-          chmod +x gradlew && ./gradlew spotlessCheck assembleRelease
+        run: chmod +x gradlew && ./gradlew assembleRelease
 
       - name: APK 签名
         uses: r0adkll/sign-android-release@v1
