@@ -48,7 +48,6 @@ import com.mean.shave.ui.components.SettingGroupTitle
 import com.mean.shave.ui.components.SettingItem
 import com.mean.shave.ui.theme.ShaveTheme
 
-
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,86 +66,86 @@ class MainActivity : ComponentActivity() {
                             navigationIcon = {
                                 Icon(
                                     ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-                                    stringResource(R.string.app_name),
-                                    Modifier.size(60.dp)
+                                    null,
+                                    Modifier.size(60.dp),
                                 )
                             },
-                            scrollBehavior = scrollBehavior
+                            scrollBehavior = scrollBehavior,
                         )
                     },
-                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection)
+                    modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
                     if (showAgreement) {
                         AgreementDialog(
                             context = this,
                             onAgree = { showAgreement = false },
-                            onDisagree = { finish() }
+                            onDisagree = { finish() },
                         )
                     } else {
                         Column(
                             Modifier
                                 .verticalScroll(rememberScrollState())
                                 .padding(contentPadding)
-                                .fillMaxSize()
+                                .fillMaxSize(),
                         ) {
                             // --------------------------
-                            SettingGroupTitle("开发者")
+                            SettingGroupTitle(stringResource(R.string.about))
                             SettingItem(
                                 icon = Icons.Outlined.NewReleases,
                                 title = stringResource(R.string.version),
-                                description = BuildConfig.VERSION_NAME
+                                description = BuildConfig.VERSION_NAME,
                             )
                             ListItem(
-                                headlineText = { Text("Mean") },
-                                supportingText = { Text(stringResource(R.string.developer_introduction)) },
+                                headlineContent = { Text(stringResource(R.string.developer_name)) },
+                                supportingContent = { Text(stringResource(R.string.developer_introduction)) },
                                 leadingContent = {
                                     Image(
                                         painterResource(R.drawable.avatar),
-                                        "开发者头像",
+                                        null,
                                         modifier = Modifier
                                             .height(24.dp)
-                                            .clip(CircleShape)
+                                            .clip(CircleShape),
                                     )
                                 },
-                                modifier = Modifier.clickable { openURL(getString(R.string.github_page)) }
+                                modifier = Modifier.clickable { openURL(getString(R.string.url_github_page)) },
                             )
                             ListItem(
-                                headlineText = { Text("Github 仓库") },
-                                supportingText = { Text(stringResource(R.string.github_repo)) },
+                                headlineContent = { Text("Github " + stringResource(R.string.repository)) },
+                                supportingContent = { Text(stringResource(R.string.url_github_repo)) },
                                 leadingContent = {
                                     Icon(
                                         ImageVector.vectorResource(R.drawable.github),
-                                        "Github 仓库",
-                                        modifier = Modifier.size(24.dp)
+                                        null,
+                                        modifier = Modifier.size(24.dp),
                                     )
                                 },
-                                modifier = Modifier.clickable { openURL(getString(R.string.github_repo)) }
+                                modifier = Modifier.clickable { openURL(getString(R.string.url_github_repo)) },
                             )
                             // --------------------------
                             Divider()
-                            SettingGroupTitle("帮助与反馈")
-                            SettingItem(icon = Icons.Outlined.Help, title = "帮助", onClick = {
-                                openURL(getString(R.string.website))
+                            SettingGroupTitle(stringResource(R.string.help_and_feedback))
+                            SettingItem(icon = Icons.Outlined.Help, title = stringResource(R.string.help), onClick = {
+                                openURL(getString(R.string.url_website))
                             })
-                            SettingItem(icon = Icons.Outlined.Feedback, title = "反馈", onClick = {
-                                openURL(getString(R.string.feedback_url))
+                            SettingItem(icon = Icons.Outlined.Feedback, title = stringResource(R.string.feedback), onClick = {
+                                openURL(getString(R.string.url_feedback))
                             })
                             // --------------------------
                             Divider()
-                            SettingGroupTitle("隐私")
+                            SettingGroupTitle(stringResource(R.string.privacy))
                             SettingItem(
-                                "服务协议",
+                                stringResource(R.string.service_agreement),
                                 Icons.Outlined.Description,
-                                onClick = { openURL(getString(R.string.website) + "/agreement") }
+                                onClick = { openURL(getString(R.string.url_website) + "/agreement") },
                             )
                             SettingItem(
-                                "隐私政策",
+                                stringResource(R.string.privacy_policy),
                                 Icons.Outlined.PrivacyTip,
-                                onClick = { openURL(getString(R.string.website) + "/privacy") }
+                                onClick = { openURL(getString(R.string.url_website) + "/privacy") },
                             )
                             // --------------------------
                             Divider()
-                            SettingGroupTitle("开放源代码许可")
+                            SettingGroupTitle(stringResource(R.string.open_source_licenses))
                             licenses.forEach {
                                 LicenseItem(context = this@MainActivity, license = it)
                             }
@@ -161,28 +160,28 @@ class MainActivity : ComponentActivity() {
         License(
             "Android Jetpack",
             "https://github.com/androidx/androidx",
-            "Apache License 2.0"
+            "Apache License 2.0",
         ),
         License(
             "Kotlin",
             "https://github.com/JetBrains/kotlin",
-            "Apache License 2.0"
+            "Apache License 2.0",
         ),
         License(
             "Material Components for Android",
             "https://github.com/material-components/material-components-android",
-            "Apache License 2.0"
+            "Apache License 2.0",
         ),
         License(
             "XLog",
             "https://github.com/elvishew/xLog",
-            "Apache License 2.0"
+            "Apache License 2.0",
         ),
         License(
             "Spotless",
             "https://github.com/diffplug/spotless",
-            "Apache License 2.0"
+            "Apache License 2.0",
         ),
-        License("ktlint", "https://github.com/pinterest/ktlint", "MIT License")
+        License("ktlint", "https://github.com/pinterest/ktlint", "MIT License"),
     ).sortedBy { it.name }
 }

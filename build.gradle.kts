@@ -1,13 +1,13 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
-    id 'com.android.application' version '7.4.2' apply false
-    id 'com.android.library' version '7.4.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
-    id("com.diffplug.spotless") version "6.16.0"
+    alias(libs.plugins.com.android.application) apply false
+    alias(libs.plugins.org.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.com.diffplug.spotless)
 }
 
 spotless {
-    def ktlintVersion = "0.46.1"
+    val ktlintVersion = "0.48.2"
 
     kotlin {
         target("**/*.kt")
@@ -19,3 +19,5 @@ spotless {
         ktlint(ktlintVersion)
     }
 }
+
+true

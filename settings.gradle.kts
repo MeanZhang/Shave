@@ -1,18 +1,18 @@
 pluginManagement {
     repositories {
-        maven { url("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/") }
-        gradlePluginPortal()
+        maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
         google()
         mavenCentral()
+        gradlePluginPortal()
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven { url("https://mirrors.cloud.tencent.com/nexus/repository/maven-public/") }
+        maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
         google()
         mavenCentral()
     }
 }
 rootProject.name = "Shave"
-include ':app'
+include(":app")

@@ -1,4 +1,4 @@
-name: Android CI
+name: Android Build
 
 on:
   push:
@@ -22,9 +22,8 @@ jobs:
           distribution: "temurin"
           cache: gradle
 
-      - name: 检查并构建
-        run: |
-          chmod +x gradlew && ./gradlew spotlessCheck assembleRelease
+      - name: 构建
+        run: chmod +x gradlew && ./gradlew assembleRelease
 
       - name: APK 签名
         uses: r0adkll/sign-android-release@v1
