@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("../shave.jks")
+            storePassword = env.fetch("KEYSTORE_PASSWORD")
+            keyPassword = env.fetch("KEY_PASSWORD")
+            keyAlias = env.fetch("KEY_ALIAS")
+        }
+    }
     namespace = "com.mean.shave"
     compileSdk = 34
 
@@ -22,7 +30,14 @@ android {
 
         manifestPlaceholders["APP_NAME"] = "@string/app_name"
     }
-
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a")
+            isUniversalApk = false
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -31,6 +46,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             applicationIdSuffix = ".debug"

@@ -3,7 +3,8 @@
 plugins {
     alias(libs.plugins.com.android.application) apply false
     alias(libs.plugins.org.jetbrains.kotlin.android) apply false
-    alias(libs.plugins.com.diffplug.spotless)
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.dotenv)
 }
 
 spotless {
