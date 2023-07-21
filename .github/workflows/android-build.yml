@@ -43,4 +43,4 @@ jobs:
         with:
           key: ${{ secrets.KEY }}
           msgtype: "file"
-          content: app/build/outputs/apk/*.apk
+          content: app/build/outputs/apk/release/*.apk
