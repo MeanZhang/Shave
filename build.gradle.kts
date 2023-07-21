@@ -1,3 +1,4 @@
+import com.diffplug.spotless.LineEnding
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -8,6 +9,8 @@ plugins {
 }
 
 spotless {
+    // TODO 等待修复
+    lineEndings = LineEnding.PLATFORM_NATIVE
     val ktlintVersion = "0.48.2"
 
     kotlin {
