@@ -16,12 +16,17 @@ def getVersion():
 
 
 def renameApks():
+    """
+    重命名 apk 文件
+    """
     apk_path = os.path.join(os.getcwd(), "app", "build", "outputs", "apk", "release")
+    print(f"apk_path: {apk_path}")
     apk_files = [file for file in os.listdir(apk_path) if file.endswith(".apk")]
     version = getVersion()
     for apk in apk_files:
         new_apk_name = apk.replace("app", f"{os.path.basename(os.getcwd())}-v{version}")
         os.rename(os.path.join(apk_path, apk), os.path.join(apk_path, new_apk_name))
+        print(f"Rename {apk} to {new_apk_name}")
 
 
 if __name__ == "__main__":
