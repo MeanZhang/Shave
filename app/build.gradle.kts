@@ -30,14 +30,6 @@ android {
 
         manifestPlaceholders["APP_NAME"] = "@string/app_name"
     }
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("arm64-v8a")
-            isUniversalApk = false
-        }
-    }
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -65,7 +57,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
+        kotlinCompilerExtensionVersion = "1.5.2"
     }
     packaging {
         resources {
