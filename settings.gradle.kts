@@ -1,6 +1,11 @@
 pluginManagement {
     repositories {
-        maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
+        if (System.getenv("METERED_CONNECTION") == "0") {
+            maven("https://mirrors.cloud.tencent.com/repository/maven/")
+        }
+        if (System.getenv("CI") != "true") {
+            maven("https://repo.nju.edu.cn/repository/maven-public/")
+        }
         google()
         mavenCentral()
         gradlePluginPortal()
@@ -9,7 +14,12 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven(url = "https://repo.nju.edu.cn/repository/maven-public/")
+        if (System.getenv("METERED_CONNECTION") == "0") {
+            maven("https://mirrors.cloud.tencent.com/repository/maven/")
+        }
+        if (System.getenv("CI") != "true") {
+            maven("https://repo.nju.edu.cn/repository/maven-public/")
+        }
         google()
         mavenCentral()
     }
