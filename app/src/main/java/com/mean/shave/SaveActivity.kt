@@ -19,15 +19,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +35,6 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.lifecycleScope
 import com.elvishew.xlog.XLog
 import com.mean.shave.ui.Constants.HORIZONTAL_MARGIN
-import com.mean.shave.ui.components.AgreementDialog
 import com.mean.shave.ui.theme.ShaveTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -47,34 +43,36 @@ import kotlinx.coroutines.withContext
 class SaveActivity : ComponentActivity() {
     private val viewModel by viewModels<SaveViewModel> { SaveViewModelFactory(intent) }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         XLog.d("action: %s", intent.action)
         XLog.d("intent type: %s", intent.type)
 
-        val sourceUri = if (Build.VERSION.SDK_INT >= 33) {
-            intent.getParcelableExtra(Intent.EXTRA_STREAM, Parcelable::class.java)
-        } else {
-            @Suppress("DEPRECATION")
-            intent.getParcelableExtra(Intent.EXTRA_STREAM)
-        } as? Uri ?: intent.data
+        val sourceUri =
+            if (Build.VERSION.SDK_INT >= 33) {
+                intent.getParcelableExtra(Intent.EXTRA_STREAM, Parcelable::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                intent.getParcelableExtra(Intent.EXTRA_STREAM)
+            } as? Uri ?: intent.data
 
         XLog.d("源文件 URI：$sourceUri")
 
-        val saveLauncher = registerForActivityResult(
-            ActivityResultContracts.CreateDocument(intent.type ?: "*/*"),
-        ) {
-            if (it == null) {
-                viewModel.setError(getString(R.string.no_file_selected))
-                Toast.makeText(this, getString(R.string.no_file_selected), Toast.LENGTH_SHORT).show()
-            } else {
-                save(it, sourceUri)
+        val saveLauncher =
+            registerForActivityResult(
+                ActivityResultContracts.CreateDocument(intent.type ?: "*/*"),
+            ) {
+                if (it == null) {
+                    viewModel.setError(getString(R.string.no_file_selected))
+                    Toast.makeText(this, getString(R.string.no_file_selected), Toast.LENGTH_SHORT)
+                        .show()
+                } else {
+                    save(it, sourceUri)
+                }
             }
-        }
 
-        if (!App.isFirstLaunch && (viewModel.state.value == State.Text || viewModel.state.value == State.File)) {
+        if (viewModel.state.value == State.Text || viewModel.state.value == State.File) {
             saveOrCopy(saveLauncher, sourceUri)
         }
 
@@ -83,116 +81,113 @@ class SaveActivity : ComponentActivity() {
             val text by viewModel.text.collectAsState()
             val error by viewModel.error.collectAsState()
             val progress by viewModel.progress.collectAsState()
-            var showAgreement by remember { mutableStateOf(App.isFirstLaunch) }
 
             ShaveTheme {
-                if (showAgreement) {
-                    AgreementDialog(context = this, onAgree = {
-                        showAgreement = false
-                        saveOrCopy(saveLauncher, sourceUri)
-                    }, onDisagree = { finish() })
-                } else {
-                    AlertDialog(
-                        properties = DialogProperties(dismissOnClickOutside = false),
-                        modifier = Modifier.wrapContentSize(),
-                        title = {
-                            Text(
-                                when (state) {
-                                    State.Saving -> stringResource(R.string.saving)
-                                    State.Error -> stringResource(R.string.error)
-                                    else -> stringResource(R.string.app_name)
-                                },
-                            )
-                        },
-                        onDismissRequest = { finish() },
-                        confirmButton = {
+                AlertDialog(
+                    properties = DialogProperties(dismissOnClickOutside = false),
+                    modifier = Modifier.wrapContentSize(),
+                    title = {
+                        Text(
                             when (state) {
-                                State.Text -> {
-                                    TextButton(onClick = {
-                                        saveLauncher.launch((text ?: "").take(10) + ".txt")
-                                    }) {
-                                        Text(stringResource(R.string.save))
-                                    }
+                                State.Saving -> stringResource(R.string.saving)
+                                State.Error -> stringResource(R.string.error)
+                                else -> stringResource(R.string.app_name)
+                            },
+                        )
+                    },
+                    onDismissRequest = { finish() },
+                    confirmButton = {
+                        when (state) {
+                            State.Text -> {
+                                TextButton(onClick = {
+                                    saveLauncher.launch((text ?: "").take(10) + ".txt")
+                                }) {
+                                    Text(stringResource(R.string.save))
                                 }
-
-                                State.Error, State.File -> {
-                                    TextButton(onClick = { finish() }) {
-                                        Text(stringResource(R.string.exit))
-                                    }
-                                }
-
-                                else -> {}
                             }
-                        },
-                        dismissButton = {
-                            when (state) {
-                                State.Text -> {
-                                    TextButton(onClick = {
-                                        copy(text ?: "")
-                                        finish()
-                                    }) {
-                                        Text(stringResource(R.string.copy))
-                                    }
-                                }
 
-                                State.Error -> {
-                                    TextButton(onClick = { saveOrCopy(saveLauncher, sourceUri) }) {
-                                        Text(stringResource(R.string.retry))
-                                    }
+                            State.Error, State.File -> {
+                                TextButton(onClick = { finish() }) {
+                                    Text(stringResource(R.string.exit))
                                 }
-
-                                else -> {}
                             }
-                        },
-                        text = {
-                            when (state) {
-                                State.Text -> {
-                                    OutlinedTextField(
-                                        label = { Text(stringResource(R.string.text)) },
-                                        modifier = Modifier
+
+                            else -> {}
+                        }
+                    },
+                    dismissButton = {
+                        when (state) {
+                            State.Text -> {
+                                TextButton(onClick = {
+                                    copy(text ?: "")
+                                    finish()
+                                }) {
+                                    Text(stringResource(R.string.copy))
+                                }
+                            }
+
+                            State.Error -> {
+                                TextButton(onClick = { saveOrCopy(saveLauncher, sourceUri) }) {
+                                    Text(stringResource(R.string.retry))
+                                }
+                            }
+
+                            else -> {}
+                        }
+                    },
+                    text = {
+                        when (state) {
+                            State.Text -> {
+                                OutlinedTextField(
+                                    label = { Text(stringResource(R.string.text)) },
+                                    modifier =
+                                        Modifier
                                             .fillMaxWidth()
                                             .padding(HORIZONTAL_MARGIN),
-                                        value = text ?: "",
-                                        onValueChange = { viewModel.setText(it) },
-                                    )
-                                }
+                                    value = text ?: "",
+                                    onValueChange = { viewModel.setText(it) },
+                                )
+                            }
 
-                                State.Saving, State.File -> {
-                                    if (progress != null) {
-                                        Row(verticalAlignment = Alignment.CenterVertically) {
-                                            LinearProgressIndicator(
-                                                progress = progress!!,
-                                                modifier = Modifier
+                            State.Saving, State.File -> {
+                                if (progress != null) {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        LinearProgressIndicator(
+                                            progress = progress!!,
+                                            modifier =
+                                                Modifier
                                                     .weight(1f)
                                                     .padding(end = 4.dp),
-                                            )
-                                            Text(
-                                                "${(progress!! * 100).toInt()}%".padStart(4),
-                                                maxLines = 1,
-                                                fontFamily = FontFamily.Monospace,
-                                            )
-                                        }
-                                    } else {
-                                        LinearProgressIndicator()
+                                        )
+                                        Text(
+                                            "${(progress!! * 100).toInt()}%".padStart(4),
+                                            maxLines = 1,
+                                            fontFamily = FontFamily.Monospace,
+                                        )
                                     }
-                                }
-
-                                State.Error -> {
-                                    Text(error)
-                                }
-
-                                State.Success -> {
-                                    Text(stringResource(R.string.save_success))
+                                } else {
+                                    LinearProgressIndicator()
                                 }
                             }
-                        },
-                    )
-                }
+
+                            State.Error -> {
+                                Text(error)
+                            }
+
+                            State.Success -> {
+                                Text(stringResource(R.string.save_success))
+                            }
+                        }
+                    },
+                )
             }
         }
     }
 
-    private fun saveOrCopy(saveLauncher: ActivityResultLauncher<String>, sourceUri: Uri?) {
+    private fun saveOrCopy(
+        saveLauncher: ActivityResultLauncher<String>,
+        sourceUri: Uri?,
+    ) {
         // 文本类型
         if (intent.type == "text/plain") {
             viewModel.setState(State.Text)
@@ -230,7 +225,10 @@ class SaveActivity : ComponentActivity() {
     /**
      * 将文本或文件保存到 URI 中
      */
-    private fun save(uri: Uri, sourceUri: Uri?) {
+    private fun save(
+        uri: Uri,
+        sourceUri: Uri?,
+    ) {
         if (sourceUri == null) {
             saveText(viewModel.text.value ?: "", uri)
         } else {
@@ -241,7 +239,10 @@ class SaveActivity : ComponentActivity() {
     /**
      * 保存文本
      */
-    private fun saveText(text: String, uri: Uri) {
+    private fun saveText(
+        text: String,
+        uri: Uri,
+    ) {
         viewModel.setState(State.Saving)
         lifecycleScope.launch(Dispatchers.IO) {
             contentResolver.openOutputStream(uri).use {
@@ -249,7 +250,11 @@ class SaveActivity : ComponentActivity() {
                     it.write(text.toByteArray())
                     viewModel.setState(State.Success)
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@SaveActivity, getString(R.string.save_success), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@SaveActivity,
+                            getString(R.string.save_success),
+                            Toast.LENGTH_SHORT,
+                        ).show()
                     }
                     finish()
                 } else {
@@ -263,7 +268,10 @@ class SaveActivity : ComponentActivity() {
     /**
      * 保存文件
      */
-    private fun saveFile(sourceUri: Uri, uri: Uri) {
+    private fun saveFile(
+        sourceUri: Uri,
+        uri: Uri,
+    ) {
         viewModel.setState(State.Saving)
         lifecycleScope.launch(Dispatchers.IO) {
             App.context.contentResolver.openInputStream(sourceUri).use { inputStream ->
@@ -291,7 +299,11 @@ class SaveActivity : ComponentActivity() {
                             }
                             viewModel.setState(State.Success)
                             withContext(Dispatchers.Main) {
-                                Toast.makeText(this@SaveActivity, getString(R.string.save_success), Toast.LENGTH_SHORT)
+                                Toast.makeText(
+                                    this@SaveActivity,
+                                    getString(R.string.save_success),
+                                    Toast.LENGTH_SHORT,
+                                )
                                     .show()
                             }
                             XLog.d("保存成功")

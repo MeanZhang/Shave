@@ -29,8 +29,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +39,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import com.mean.shave.ui.components.AgreementDialog
 import com.mean.shave.ui.components.License
 import com.mean.shave.ui.components.LicenseItem
 import com.mean.shave.ui.components.SettingGroupTitle
@@ -58,7 +55,6 @@ class MainActivity : ComponentActivity() {
             ShaveTheme {
                 val state = rememberTopAppBarState()
                 val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(state)
-                var showAgreement by remember { mutableStateOf(App.isFirstLaunch) }
                 Scaffold(
                     topBar = {
                         LargeTopAppBar(
@@ -75,80 +71,81 @@ class MainActivity : ComponentActivity() {
                     },
                     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
                 ) { contentPadding ->
-                    if (showAgreement) {
-                        AgreementDialog(
-                            context = this,
-                            onAgree = { showAgreement = false },
-                            onDisagree = { finish() },
+                    Column(
+                        Modifier
+                            .verticalScroll(rememberScrollState())
+                            .padding(contentPadding)
+                            .fillMaxSize(),
+                    ) {
+                        // --------------------------
+                        SettingGroupTitle(stringResource(R.string.about))
+                        SettingItem(
+                            icon = Icons.Outlined.NewReleases,
+                            title = stringResource(R.string.version),
+                            description = BuildConfig.VERSION_NAME,
                         )
-                    } else {
-                        Column(
-                            Modifier
-                                .verticalScroll(rememberScrollState())
-                                .padding(contentPadding)
-                                .fillMaxSize(),
-                        ) {
-                            // --------------------------
-                            SettingGroupTitle(stringResource(R.string.about))
-                            SettingItem(
-                                icon = Icons.Outlined.NewReleases,
-                                title = stringResource(R.string.version),
-                                description = BuildConfig.VERSION_NAME,
-                            )
-                            ListItem(
-                                headlineContent = { Text(stringResource(R.string.developer_name)) },
-                                supportingContent = { Text(stringResource(R.string.developer_introduction)) },
-                                leadingContent = {
-                                    Image(
-                                        painterResource(R.drawable.avatar),
-                                        null,
-                                        modifier = Modifier
+                        ListItem(
+                            headlineContent = { Text(stringResource(R.string.developer_name)) },
+                            supportingContent = { Text(stringResource(R.string.developer_introduction)) },
+                            leadingContent = {
+                                Image(
+                                    painterResource(R.drawable.avatar),
+                                    null,
+                                    modifier =
+                                        Modifier
                                             .height(24.dp)
                                             .clip(CircleShape),
-                                    )
-                                },
-                                modifier = Modifier.clickable { openURL(getString(R.string.url_github_page)) },
-                            )
-                            ListItem(
-                                headlineContent = { Text("Github " + stringResource(R.string.repository)) },
-                                supportingContent = { Text(stringResource(R.string.url_github_repo)) },
-                                leadingContent = {
-                                    Icon(
-                                        ImageVector.vectorResource(R.drawable.github),
-                                        null,
-                                        modifier = Modifier.size(24.dp),
-                                    )
-                                },
-                                modifier = Modifier.clickable { openURL(getString(R.string.url_github_repo)) },
-                            )
-                            // --------------------------
-                            Divider()
-                            SettingGroupTitle(stringResource(R.string.help_and_feedback))
-                            SettingItem(icon = Icons.Outlined.Help, title = stringResource(R.string.help), onClick = {
+                                )
+                            },
+                            modifier = Modifier.clickable { openURL(getString(R.string.url_github_page)) },
+                        )
+                        ListItem(
+                            headlineContent = { Text("Github " + stringResource(R.string.repository)) },
+                            supportingContent = { Text(stringResource(R.string.url_github_repo)) },
+                            leadingContent = {
+                                Icon(
+                                    ImageVector.vectorResource(R.drawable.github),
+                                    null,
+                                    modifier = Modifier.size(24.dp),
+                                )
+                            },
+                            modifier = Modifier.clickable { openURL(getString(R.string.url_github_repo)) },
+                        )
+                        // --------------------------
+                        Divider()
+                        SettingGroupTitle(stringResource(R.string.help_and_feedback))
+                        SettingItem(
+                            icon = Icons.Outlined.Help,
+                            title = stringResource(R.string.help),
+                            onClick = {
                                 openURL(getString(R.string.url_website))
-                            })
-                            SettingItem(icon = Icons.Outlined.Feedback, title = stringResource(R.string.feedback), onClick = {
+                            },
+                        )
+                        SettingItem(
+                            icon = Icons.Outlined.Feedback,
+                            title = stringResource(R.string.feedback),
+                            onClick = {
                                 openURL(getString(R.string.url_feedback))
-                            })
-                            // --------------------------
-                            Divider()
-                            SettingGroupTitle(stringResource(R.string.privacy))
-                            SettingItem(
-                                stringResource(R.string.service_agreement),
-                                Icons.Outlined.Description,
-                                onClick = { openURL(getString(R.string.url_website) + "/agreement") },
-                            )
-                            SettingItem(
-                                stringResource(R.string.privacy_policy),
-                                Icons.Outlined.PrivacyTip,
-                                onClick = { openURL(getString(R.string.url_website) + "/privacy") },
-                            )
-                            // --------------------------
-                            Divider()
-                            SettingGroupTitle(stringResource(R.string.open_source_licenses))
-                            licenses.forEach {
-                                LicenseItem(context = this@MainActivity, license = it)
-                            }
+                            },
+                        )
+                        // --------------------------
+                        Divider()
+                        SettingGroupTitle(stringResource(R.string.privacy))
+                        SettingItem(
+                            stringResource(R.string.service_agreement),
+                            Icons.Outlined.Description,
+                            onClick = { openURL(getString(R.string.url_website) + "/agreement") },
+                        )
+                        SettingItem(
+                            stringResource(R.string.privacy_policy),
+                            Icons.Outlined.PrivacyTip,
+                            onClick = { openURL(getString(R.string.url_website) + "/privacy") },
+                        )
+                        // --------------------------
+                        Divider()
+                        SettingGroupTitle(stringResource(R.string.open_source_licenses))
+                        licenses.forEach {
+                            LicenseItem(context = this@MainActivity, license = it)
                         }
                     }
                 }
@@ -156,32 +153,33 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val licenses = listOf(
-        License(
-            "Android Jetpack",
-            "https://github.com/androidx/androidx",
-            "Apache License 2.0",
-        ),
-        License(
-            "Kotlin",
-            "https://github.com/JetBrains/kotlin",
-            "Apache License 2.0",
-        ),
-        License(
-            "Material Components for Android",
-            "https://github.com/material-components/material-components-android",
-            "Apache License 2.0",
-        ),
-        License(
-            "XLog",
-            "https://github.com/elvishew/xLog",
-            "Apache License 2.0",
-        ),
-        License(
-            "Spotless",
-            "https://github.com/diffplug/spotless",
-            "Apache License 2.0",
-        ),
-        License("ktlint", "https://github.com/pinterest/ktlint", "MIT License"),
-    ).sortedBy { it.name }
+    private val licenses =
+        listOf(
+            License(
+                "Android Jetpack",
+                "https://github.com/androidx/androidx",
+                "Apache License 2.0",
+            ),
+            License(
+                "Kotlin",
+                "https://github.com/JetBrains/kotlin",
+                "Apache License 2.0",
+            ),
+            License(
+                "Material Components for Android",
+                "https://github.com/material-components/material-components-android",
+                "Apache License 2.0",
+            ),
+            License(
+                "XLog",
+                "https://github.com/elvishew/xLog",
+                "Apache License 2.0",
+            ),
+            License(
+                "Spotless",
+                "https://github.com/diffplug/spotless",
+                "Apache License 2.0",
+            ),
+            License("ktlint", "https://github.com/pinterest/ktlint", "MIT License"),
+        ).sortedBy { it.name }
 }
