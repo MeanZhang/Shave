@@ -20,14 +20,6 @@ export default defineUserConfig({
         text: "使用帮助",
         link: "/help",
       },
-      {
-        text: "服务协议",
-        link: "/agreement",
-      },
-      {
-        text: "隐私政策",
-        link: "/privacy",
-      },
     ],
   }),
 });

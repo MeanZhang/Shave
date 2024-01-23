@@ -14,11 +14,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.NewReleases
-import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -127,19 +125,6 @@ class MainActivity : ComponentActivity() {
                             onClick = {
                                 openURL(getString(R.string.url_feedback))
                             },
-                        )
-                        // --------------------------
-                        Divider()
-                        SettingGroupTitle(stringResource(R.string.privacy))
-                        SettingItem(
-                            stringResource(R.string.service_agreement),
-                            Icons.Outlined.Description,
-                            onClick = { openURL(getString(R.string.url_website) + "/agreement") },
-                        )
-                        SettingItem(
-                            stringResource(R.string.privacy_policy),
-                            Icons.Outlined.PrivacyTip,
-                            onClick = { openURL(getString(R.string.url_website) + "/privacy") },
                         )
                         // --------------------------
                         Divider()

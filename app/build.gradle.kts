@@ -27,8 +27,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        manifestPlaceholders["APP_NAME"] = "@string/app_name"
     }
     buildTypes {
         release {
@@ -39,11 +37,6 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("release")
-        }
-        debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
-            manifestPlaceholders["APP_NAME"] = "享存（debug）"
         }
     }
     compileOptions {
@@ -58,7 +51,7 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.2"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     packaging {
         resources {

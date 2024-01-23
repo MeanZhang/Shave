@@ -7,12 +7,12 @@ tagline: 一款可以将分享内容保存为文件的应用
 actions:
   - text: 使用帮助
     link: /help
-footer: Copyright © 2022-2023 Mean
+footer: Copyright © 2022-2024 Mean
 ---
 
 <p align="center">
   <a href="https://developer.android.google.cn/jetpack/compose" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.4.8-brightgreen?logo=android" />
+    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.5.8-brightgreen?logo=android" />
   </a>
   <a href="https://android-arsenal.com/api?level=23" alt="API">
     <img src="https://img.shields.io/badge/API-23%2B-blue?logo=android" />
