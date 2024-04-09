@@ -21,4 +21,4 @@
 
 | 主界面                     | 文本分享                               | 分享菜单                               |
 | -------------------------- | -------------------------------------- | -------------------------------------- |
-| ![home](./images/home.png) | ![share-text](./images/share-text.jpg) | ![share-menu](./images/share-menu.png) |
+| ![home](./images/home.webp) | ![share-text](./images/share-text.webp) | ![share-menu](./images/share-menu.webp) |
