@@ -17,10 +17,11 @@ fun SettingGroupTitle(title: String) {
         text = title,
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier
-            .padding(
-                horizontal = HORIZONTAL_MARGIN,
-            )
-            .padding(top = TOP_MARGIN, bottom = BOTTOM_MARGIN),
+        modifier =
+            Modifier
+                .padding(
+                    horizontal = HORIZONTAL_MARGIN,
+                )
+                .padding(top = TOP_MARGIN, bottom = BOTTOM_MARGIN),
     )
 }

@@ -1,18 +1,21 @@
 [versions]
-agp = "8.0.2"
-org-jetbrains-kotlin-android = "1.8.22"
-core-ktx = "1.10.1"
+agp = "8.2.1"
+org-jetbrains-kotlin-android = "1.9.22"
+core-ktx = "1.12.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
-lifecycle-runtime-ktx = "2.6.1"
-activity-compose = "1.7.2"
-compose-bom = "2023.06.01"
-material-components = "1.9.0"
+lifecycle-runtime-ktx = "2.7.0"
+activity-compose = "1.8.2"
+compose-bom = "2024.03.00"
+# 插件
+spotless = "6.25.0"
+dotenv = "4.0.0"
+# 自定义
+material-components = "1.11.0"
 xlog = "1.11.0"
 datastore = "1.0.0"
-fragment-ktx = "1.6.0"
-spotless = "6.19.0"
+fragment-ktx = "1.6.2"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -29,6 +32,7 @@ ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" }
+# 自定义
 material-components = { group = "com.google.android.material", name = "material", version.ref = "material-components" }
 datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
@@ -38,6 +42,7 @@ xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "org-jetbrains-kotlin-android" }
-com-diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+dotenv = { id = "co.uzzu.dotenv.gradle", version.ref = "dotenv" }
 
 [bundles]

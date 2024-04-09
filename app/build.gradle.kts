@@ -5,6 +5,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("../shave.jks")
+            storePassword = env.fetch("KEYSTORE_PASSWORD")
+            keyPassword = env.fetch("KEY_PASSWORD")
+            keyAlias = env.fetch("KEY_ALIAS")
+        }
+    }
     namespace = "com.mean.shave"
     compileSdk = 34
 
@@ -12,17 +20,14 @@ android {
         applicationId = "com.mean.shave"
         minSdk = 23
         targetSdk = 34
-        versionCode = 5
-        versionName = "1.3.0"
+        versionCode = 6
+        versionName = "1.3.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        manifestPlaceholders["APP_NAME"] = "@string/app_name"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -31,11 +36,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-        }
-        debug {
-            applicationIdSuffix = ".debug"
-            versionNameSuffix = "-debug"
-            manifestPlaceholders["APP_NAME"] = "享存（debug）"
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
@@ -47,9 +48,10 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.8"
+        kotlinCompilerExtensionVersion = "1.5.8"
     }
     packaging {
         resources {
