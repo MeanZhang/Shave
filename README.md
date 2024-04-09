@@ -4,15 +4,15 @@
 
 <p align="center">
   <a href="https://developer.android.google.cn/jetpack/compose" alt="Jetpack Compose">
-    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.4.8-brightgreen?logo=android" />
+    <img src="https://img.shields.io/badge/Jetpack%20Compose-1.5.8-brightgreen?logo=android" />
   </a>
   <a href="https://android-arsenal.com/api?level=23" alt="API">
     <img src="https://img.shields.io/badge/API-23%2B-blue?logo=android" />
   </a>
-  <a href="https://github.com/MeanZhang/Shave/actions/workflows/android.yml"  alt="Android CI">
-    <img src="https://github.com/MeanZhang/Traclock/actions/workflows/android.yml/badge.svg" />
+  <a href="https://github.com/MeanZhang/Shave/actions/workflows/android-build.yml"  alt="Android 构建">
+    <img src="https://github.com/MeanZhang/Traclock/actions/workflows/android-build.yml/badge.svg" />
   </a>
-  <a href="https://github.com/MeanZhang/Shave/releases"  alt="GitHub release">
+  <a href="https://github.com/MeanZhang/Shave/releases"  alt="GitHub Releases">
     <img src="https://img.shields.io/github/v/release/MeanZhang/Shave?sort=semver">
   </a>
 </p>
