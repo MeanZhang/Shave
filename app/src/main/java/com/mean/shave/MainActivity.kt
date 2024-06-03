@@ -14,11 +14,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.Help
 import androidx.compose.material.icons.outlined.Feedback
 import androidx.compose.material.icons.outlined.Help
 import androidx.compose.material.icons.outlined.NewReleases
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.ListItem
@@ -110,10 +111,10 @@ class MainActivity : ComponentActivity() {
                             modifier = Modifier.clickable { openURL(getString(R.string.url_github_repo)) },
                         )
                         // --------------------------
-                        Divider()
+                        HorizontalDivider()
                         SettingGroupTitle(stringResource(R.string.help_and_feedback))
                         SettingItem(
-                            icon = Icons.Outlined.Help,
+                            icon = Icons.AutoMirrored.Outlined.Help,
                             title = stringResource(R.string.help),
                             onClick = {
                                 openURL(getString(R.string.url_website))
@@ -127,7 +128,7 @@ class MainActivity : ComponentActivity() {
                             },
                         )
                         // --------------------------
-                        Divider()
+                        HorizontalDivider()
                         SettingGroupTitle(stringResource(R.string.open_source_licenses))
                         licenses.forEach {
                             LicenseItem(context = this@MainActivity, license = it)
@@ -166,5 +167,5 @@ class MainActivity : ComponentActivity() {
                 "Apache License 2.0",
             ),
             License("ktlint", "https://github.com/pinterest/ktlint", "MIT License"),
-        ).sortedBy { it.name }
+        ).sortedBy { it.name.lowercase() }
 }
