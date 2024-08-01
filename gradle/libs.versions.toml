@@ -13,7 +13,7 @@ spotless = "6.25.0"
 dotenv = "4.0.0"
 # 自定义
 material-components = "1.12.0"
-xlog = "1.11.0"
+xlog = "1.11.1"
 datastore = "1.1.1"
 fragment-ktx = "1.8.1"
 
