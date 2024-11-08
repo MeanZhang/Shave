@@ -15,12 +15,12 @@ android {
         }
     }
     namespace = "com.mean.shave"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.mean.shave"
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 7
         versionName = "1.3.2"
 

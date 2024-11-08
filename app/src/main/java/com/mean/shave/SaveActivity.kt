@@ -153,7 +153,7 @@ class SaveActivity : ComponentActivity() {
                                 if (progress != null) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         LinearProgressIndicator(
-                                            progress = progress!!,
+                                            progress = { progress!! },
                                             modifier =
                                                 Modifier
                                                     .weight(1f)
