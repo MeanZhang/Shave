@@ -1,5 +1,3 @@
-import com.diffplug.spotless.LineEnding
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
@@ -11,15 +9,16 @@ plugins {
 }
 
 spotless {
-    // TODO 等待修复
-    lineEndings = LineEnding.PLATFORM_NATIVE
-    val ktlintVersion = "1.1.1"
+    val ktlintVersion = libs.versions.ktlint.get()
 
     kotlin {
         target("**/*.kt")
-        targetExclude("$buildDir/**/*.kt", "bin/**/*.kt")
-        ktlint(ktlintVersion)
-            .setEditorConfigPath("$projectDir/.editorconfig")
+        targetExclude("${project.layout.buildDirectory}/**/*.kt", "bin/**/*.kt", "timepicker/**/*.kt")
+        ktlint(ktlintVersion).setEditorConfigPath("$projectDir/.editorconfig").customRuleSets(
+            listOf(
+//                "io.nlopez.compose.rules:ktlint:${libs.versions.composeRules.get()}",
+            ),
+        )
     }
     kotlinGradle {
         target("**.gradle.kts")
