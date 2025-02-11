@@ -15,7 +15,7 @@ dotenv = "4.0.0"
 # 自定义
 material-components = "1.12.0"
 xlog = "1.11.1"
-datastore = "1.1.1"
+datastore = "1.1.2"
 fragment-ktx = "1.8.5"
 
 [libraries]
