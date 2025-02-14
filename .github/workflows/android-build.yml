@@ -25,7 +25,7 @@ jobs:
       - name: 构建并签名
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ALIAS }}
+          KEY_ALIAS: ${{ vars.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: chmod +x gradlew && ./gradlew assembleRelease
 
@@ -41,6 +41,6 @@ jobs:
       - name: 发送 APK 到企业微信
         uses: MeanZhang/wecom-group-robot@v1.2
         with:
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.WECOM_ROBOT_KEY }}
           msgtype: "file"
           content: app/build/outputs/apk/release/*.apk
