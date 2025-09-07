@@ -13,6 +13,6 @@
   },
   "devDependencies": {
     "husky": "^9.1.7",
-    "vitepress": "^1.6.3"
+    "vitepress": "^1.6.4"
   }
 }
