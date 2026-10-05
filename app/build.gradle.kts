@@ -29,9 +29,11 @@ android {
 
     buildTypes {
         release {
+            // 完整 R8 优化（代码 + 资源）。
+            // AGP 9.3+ 新 DSL：不设置 packageScope 即为全量优化，
+            // 且默认自带 Android 平台保留规则（等同 proguard-android-optimize.txt）。
             optimization {
                 enable = true
-                packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
             }
             signingConfig = signingConfigs.getByName("release")
         }
