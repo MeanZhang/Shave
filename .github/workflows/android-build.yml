@@ -29,9 +29,6 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: chmod +x gradlew && ./gradlew assembleRelease
 
-      - name: 重命名 APK
-        run: python3 ci.py rename
-
       - name: 上传 APK
         uses: actions/upload-artifact@v7
         with:
