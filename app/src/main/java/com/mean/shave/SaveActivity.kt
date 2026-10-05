@@ -193,7 +193,7 @@ class SaveActivity : ComponentActivity() {
             viewModel.setState(State.Text)
         } else {
             viewModel.setState(State.File)
-            if (sourceUri != null && sourceUri.path != null) {
+            if (sourceUri?.path != null) {
                 val filename =
                     contentResolver.query(sourceUri, null, null, null, null)
                         ?.use {
