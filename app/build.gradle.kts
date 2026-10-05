@@ -1,3 +1,5 @@
+import com.android.build.api.variant.FilterConfiguration.FilterType
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -41,10 +43,13 @@ android {
     androidComponents {
         onVariants { variant ->
             val version = android.defaultConfig.versionName.orEmpty()
-            val newFileName =
-                "${rootProject.name.replace(" ", "_")}-${variant.name}-$version.apk"
+            val baseName = rootProject.name.replace(" ", "_")
             variant.outputs.forEach { output ->
-                output.outputFileName.set(newFileName)
+                val abi =
+                    output.filters.firstOrNull { it.filterType == FilterType.ABI }?.identifier
+                output.outputFileName.set(
+                    listOfNotNull(baseName, abi, variant.name, "$version.apk").joinToString("-"),
+                )
             }
         }
     }
@@ -55,6 +60,14 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+    }
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a")
+            isUniversalApk = false
+        }
     }
 }
 
