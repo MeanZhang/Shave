@@ -38,6 +38,16 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
     }
+    androidComponents {
+        onVariants { variant ->
+            val version = android.defaultConfig.versionName.orEmpty()
+            val newFileName =
+                "${rootProject.name.replace(" ", "_")}-${variant.name}-$version.apk"
+            variant.outputs.forEach { output ->
+                output.outputFileName.set(newFileName)
+            }
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
