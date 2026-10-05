@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6.0.0
         with:
           java-version: "17"
           distribution: "temurin"
@@ -25,7 +25,7 @@ jobs:
       - name: 构建并签名
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.ALIAS }}
+          KEY_ALIAS: ${{ vars.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: chmod +x gradlew && ./gradlew assembleRelease
 
@@ -33,7 +33,7 @@ jobs:
         run: python3 ci.py rename
 
       - name: 上传 APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: APK
           path: app/build/outputs/apk/release
@@ -41,6 +41,6 @@ jobs:
       - name: 发送 APK 到企业微信
         uses: MeanZhang/wecom-group-robot@v1.2
         with:
-          key: ${{ secrets.KEY }}
+          key: ${{ secrets.WECOM_ROBOT_KEY }}
           msgtype: "file"
           content: app/build/outputs/apk/release/*.apk

@@ -6,46 +6,41 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class SaveViewModel(intent: Intent) : ViewModel() {
-    private val _state = MutableStateFlow(State.File)
-    private val _text = MutableStateFlow<String?>(null)
-    private val _error = MutableStateFlow("")
-    private val _progress = MutableStateFlow<Float?>(null)
-
     val state: StateFlow<State>
-        get() = _state
+        field = MutableStateFlow(State.File)
     val text: StateFlow<String?>
-        get() = _text
+        field = MutableStateFlow<String?>(null)
     val error: StateFlow<String>
-        get() = _error
+        field = MutableStateFlow("")
     val progress: StateFlow<Float?>
-        get() = _progress
+        field = MutableStateFlow<Float?>(null)
 
     init {
         if (intent.type == "text/plain") {
-            _state.value = State.Text
-            _text.value = intent.getStringExtra(Intent.EXTRA_TEXT)
+            state.value = State.Text
+            text.value = intent.getStringExtra(Intent.EXTRA_TEXT)
         } else {
-            _state.value = State.File
+            state.value = State.File
         }
     }
 
     fun setText(value: String?) {
-        _text.value = value
+        text.value = value
     }
 
     fun setState(value: State) {
-        _state.value = value
+        state.value = value
         if (value == State.Success) {
-            _text.value = "保存成功"
+            text.value = "保存成功"
         }
     }
 
     fun setError(value: String) {
         setState(State.Error)
-        _error.value = value
+        error.value = value
     }
 
     fun setProgress(progress: Float) {
-        _progress.value = progress
+        this.progress.value = progress
     }
 }

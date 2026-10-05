@@ -1,0 +1,10 @@
+# Shave 保留规则
+#
+# 说明：本项目使用 AGP 9.3+ 的 optimization { enable = true } 完整 R8 模式，
+# 该模式已默认附带 Android 平台保留规则（等同 proguard-android-optimize.txt），
+# 且会自动保留 AndroidManifest 中声明的组件。因此这里只补充应用自身必需的规则。
+# 规则越窄，R8 的可优化空间越大，请勿随意添加大范围的 -keep。
+
+# 保留行号与源文件名，便于用 mapping.txt 还原 release 堆栈。
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
